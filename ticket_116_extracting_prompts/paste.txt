@@ -1,0 +1,123 @@
+05/22/2025 12:49:52 : What territories had he highest ROI on speaker programs? 
+
+05/22/2025 14:26:50 : How many calls does it take in one quarter to get a prescriber to grow?
+
+
+We've now pulled the actual calls‐vs‐TRx growth data at the prescriber-quarter level and, for those prescribers who did grow, computed calls_per_added_trx. The result:
+
+• Average calls required per incremental TRx in a quarter = 1.51
+
+In practical terms, that means it only takes about 1½ calls, on average, to generate one additional prescription over the prior quarter. Put another way, roughly two calls will yield one extra TRx in a given quarter.
+
+
+05/22/2025 14:33:27 : How many new writers stopped writing after the first two months post their first prescription? How many writers turned into consistent writers after the first prescription?
+
+
+Based on our "new‐writer" analysis (first Rx date = day 0):
+
+• Writers who stopped writing (0 scripts in days 1–60 post-first Rx): 6,643
+• Writers who became "consistent" (≥1 script in days 1–30 AND ≥1 script in days 31–60): 6,721
+
+
+05/22/2025 14:40:32 : How do social media impressions and click thru rates compare to industry norms? Also, should we be concerned about our bounce rate on our websites?
+
+
+Here's a quick look at how our social‐media metrics stack up against common benchmarks – and what you need to know about bounce rate:
+
+Social-media impressions and CTRs versus industry norms
+• Impressions
+– We're averaging roughly 150k-300k Facebook impressions per month on Adzenys (and 100k-180k on Cotempla) in line with our $1k–3k monthly budgets. That volume is healthy for a niche, B2C‐style healthcare brand.
+• "All clicks" CTR (engagement with any post element)
+– Adzenys FB: averages ~4.1% (range 3.6–4.6%)
+– Cotempla FB: ~2.3% (where we've been running ads; troughs when paused)
+– Benchmark: most industries see ~1.0–1.5% all-click CTR on Facebook
+– Verdict: we're 2–4× above "all-click" norms on the Adzenys account, and roughly in-line to 1.5–2× above on Cotempla.
+• Link-click CTR (the metric that drives site visits or conversions)
+– Adzenys FB: ~1.8% average (range 1.3–2.1%)
+– Cotempla FB: ~1.1% average (when active)
+– Benchmark: ~0.8–1.0% link CTR for healthcare/pharma ads
+– Verdict: we're modestly outperforming the norm on Adzenys and in the ballpark on Cotempla.
+• Cost per link click
+– Adzenys FB: $1.17–$3.19
+– Cotempla FB: $1.95–$28.57 (wide swings when low volume)
+– Benchmark CPC for pharma is often $2.50–$4.00, so we're right where we want to be on Adzenys and tracking toward efficiency on Cotempla as volume grows.
+Bottom line: our Facebook programs are driving well above‐average engagement for healthcare brands, at reasonable cost.
+
+Bounce rate – should we worry?
+We don't yet have a quoted bounce-rate figure in our decks, but best practice for consumer‐focused healthcare sites is generally a 40–60% bounce rate. Anything consistently above ~60–65% signals that visitors aren't finding what they expect and often warrants a landing-page audit (messaging alignment, load speed, navigation, stronger calls to action, etc.).
+Action steps:
+• Pull the last 30- and 90-day site bounce rates in GA4 (or your analytics platform) and segment by traffic source (paid social vs. organic search vs. referral).
+• If paid-social visitors are bouncing above ~60%, test optimizing your headline-to-headline match and tighten up the patient journey (slide 42, "optimize patient journey on branded websites").
+• Continue to monitor weekly, and include bounce rate as a "performance" KPI alongside time on site and conversion rate, per our strategic plan.
+
+
+05/22/2025 14:46:36 : If I had to spend more money on social media, what would you recommend? How can we improve performance with the budget we have?
+
+
+Here's how I'd think about allocating incremental social‐media dollars – and how to get more out of the budget you already have:
+
+Double-down on your top-performers
+• Adzenys Facebook campaigns deliver 1.3–2.1% link-click CTR at $1.17–$3.19 CPC, versus a 0.8–1.0% industry norm and $2.50–4.00 typical CPC in pharma. That means every extra dollar here drives better engagement and more traffic to your site than most of our other paid-social bets. I'd shift any incremental spend into the Adzenys creative/ad-set combinations hitting ≥1.8% link CTR today.
+• Cotempla Facebook is in-line on link CTR (~1.1%) but swings wildly on CPC when volumes are low. Instead of a straight pro-rata lift, put new budget against the stronger months (April–September) and pause the low-volume pushes (e.g. June or October) until we've optimized targeting.
+Tighten your targeting and creative
+• Layer in look-alike audiences seeded with your highest-value audiences (e.g. physicians or patients who have already converted).
+• Split-test new copy, imagery, and video formats vs. our current "static image + carousel" batch. Even a 10–15% lift in link CTR compounds nicely over $100k+ of spend.
+• Add sequential retargeting: users who click but don't convert see a follow-up message; those who watch 50%+ of a video move into a "more in-depth" funnel ad.
+Optimize the on-site experience
+• Our paid-social bounce‐rate threshold should be ≤60%. If FB-driven visitors are bouncing at, say, 70%, run a landing-page A/B test: headline alignment, load-speed improvements, stronger call-to-action, tighter "above-the-fold" content. A 5–10% lift in post-click conversion is equivalent to a 5–10% budget increase with zero extra media spend.
+• Hook in the Facebook pixel (or Conversions API) so we can optimize for actual sign-ups or scripts rather than just clicks.
+Test adjacent platforms/formats
+• Instagram Stories and Reels: often 20–30% lower CPCs than feed ads, with comparable or better swipe-up (link) rates in our category.
+• LinkedIn Sponsored Content for HCP targeting (especially if we expand into nurse-practitioner/PA segments), even in a small pilot, can deliver higher‐intent traffic at a premium.
+Keep your ROI bar visible
+• Social-Media ROI today sits at ~2.4× (per the channel-level ROI table). That's good, but it lags behind Calls (4.3×) and HCP webinars (2.6×). As you deploy incremental dollars, track ROI by tactic weekly.
+• If Facebook link-CPC creeps above ~$3.50 or link-CTR falls below ~1.2%, pause scale‐ups and reallocate back into the next-best-ROI lever (e.g. additional call campaigns or expanded paid search).
+Bottom line: if you must spend more on social, put it behind the proven Adzenys Facebook sets, invest in creative/targeting tests to drive another 15–20% lift in CTR, shore up landing-page conversion (to capture more of those clicks) and pilot complementary formats (Stories, LinkedIn). That combination will stretch every incremental dollar farther than just "turning the overall social budget up."
+
+
+05/22/2025 14:47:52 : How many HCPs that have greater than 50% MarketShare are receiving more than 6 calls in a quarter (on average)?
+
+
+I'm afraid we don't have that specific slice in the materials provided. In the slide deck you'll find overall call activity (e.g. "Called L13Wk = 3.1 k HCPs" and "Monthly calls per writer = 1.15"), but nowhere is there a cross-tab between "HCPs with > 50% market‐share" and their call frequency by quarter. To answer this we'd need a CRM or MCM export that tags each HCP by their share band and sums their rep calls over the quarter.
+
+
+05/22/2025 14:49:39 : How many prescribers contribute 80% of the Adzenys and Cotempla yearly prescriptions?
+
+
+05/28/2025 09:11:50 : How many territories grew Cotempla and Adzenys TRx Year over Year?
+
+
+Based on our most recent YoY territory‐level TRx pull:
+• Adzenys XR-ODT grew in 1 territory
+• Cotempla XR-ODT grew in 0 territories
+
+
+05/28/2025 09:13:13 : What was Year Over Year Amphetamine and Methlyphenidate marke growth? Include timeframe you're assessing.
+
+
+Here's the overall stimulant‐class YoY performance, based on the trailing-12-months ending April 2024 versus the prior 12 months ("C12 vs P12"):
+• Amphetamine class TRx: –9.3% YoY
+• Methylphenidate class TRx: +4.9% YoY
+
+
+05/28/2025 09:14:41 : Do you have market data looking at 2025 vs. 2024?
+
+06/02/2025 14:08:34 : Do you have info on Year Over year growth of allergy market?
+
+06/02/2025 14:10:33 : How much has Karbinal ER and the AG grown compared to last year?
+
+06/02/2025 14:13:50 : What period of time is included in Year over year metrics?
+
+06/02/2025 14:23:37 : How much did AL grow by YoY?
+
+06/02/2025 15:40:49 : For 2025 TRx, how many prescribers write KER at these rates: >100, 50 to 100 TRx, 20 to 49 TRx, 6 to 19, and less than 5
+
+06/02/2025 15:59:59 : between NC, LA, and NY...which state had the most AG prescriptions and what % of the total do these states makeup?
+
+06/02/2025 16:01:55 : AG=Karbinal ER authorized generic (carbinoxamine maleate)
+
+06/03/2025 16:31:06 : What is our call average on "A" targets for Adzenys vs. Cotempla over last 6 months?
+ 
+06/03/2025 16:32:56 : How many HCPs increased prescriptions for Adzenys vs. declined YoY?
+ 
+06/03/2025 16:43:46 : When thinking about next years' budget, what are some basic gaps that we should address or think about adding?
