@@ -1,0 +1,2137 @@
+
+KBQ 1: 
+What was the most successful <marketing channel> or <media partner> or <creative asset> in <time period>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+1. Email Campaign Performance: 
+
+SELECT 
+    Campaign_Name,
+    COUNT(*) as emails_sent,
+    SUM(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as opens,
+    SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as clicks,
+    ROUND(100.0 * SUM(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as open_rate,
+    ROUND(100.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate
+FROM email_activity
+WHERE `Created_Date-Time` BETWEEN '2024-07-01' AND '2025-06-30'
+GROUP BY Campaign_Name
+ORDER BY click_rate DESC;
+
+
+2. Marketing Channel/Vendor Rankings:
+
+SELECT 
+    Category as channel,
+    Vendor,
+    ROI,
+    Engagement_Rate,
+    Total_Reach,
+    CPM
+FROM marketing_vendor_and_channel
+ORDER BY ROI DESC, Engagement_Rate DESC;
+
+
+3. Sales Channel Activity:
+
+SELECT 
+    Call_Activity_Type as channel,
+    COUNT(DISTINCT Call_ID) as total_activities,
+    COUNT(DISTINCT NPI) as unique_hcps_reached
+FROM sales_rep_call_activity
+WHERE Call_Date BETWEEN '2024-07-01' AND '2025-06-30'
+GROUP BY Call_Activity_Type
+ORDER BY total_activities DESC;
+
+
+4. Webinar Performance:
+
+SELECT 
+    Date_of_Webinar,
+    COUNT(DISTINCT npi) as attendees
+FROM webinar
+WHERE Date_of_Webinar BETWEEN '2024-07-01' AND '2025-06-30'
+GROUP BY Date_of_Webinar
+ORDER BY attendees DESC;
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 2: 
+Define success - e.g., CTR, open rate, etc?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1, SQL Query for Multi-Channel Success Metrics:
+
+-- Email success metrics
+SELECT 
+    'Email' as channel,
+    COUNT(*) as volume,
+    ROUND(100.0 * SUM(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as success_rate_1,
+    ROUND(100.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as success_rate_2
+FROM email_activity
+WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+
+UNION ALL
+
+-- Sales activity success metrics
+SELECT 
+    'Field Sales' as channel,
+    COUNT(DISTINCT Call_ID) as volume,
+    COUNT(DISTINCT NPI) as success_rate_1,
+    COUNT(DISTINCT CASE WHEN Detailed_Products IS NOT NULL THEN Call_ID END) as success_rate_2
+FROM sales_rep_call_activity
+WHERE Call_Date BETWEEN '2023-01-01' AND '2025-06-30';
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 3: 
+Define success - e.g., CTR, open rate, etc?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1. Campaign Performance by Timing:
+
+SELECT 
+    Campaign_Name,
+    DAYOFWEEK(`Created_Date-Time`) as day_of_week,
+    HOUR(`Created_Date-Time`) as hour_sent,
+    COUNT(*) as volume,
+    ROUND(100.0 * SUM(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as open_rate,
+    ROUND(100.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate
+FROM email_activity
+WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND Campaign_Name IS NOT NULL
+GROUP BY Campaign_Name, day_of_week, hour_sent
+HAVING COUNT(*) > 50
+ORDER BY click_rate DESC
+LIMIT 50;
+
+
+2. Performance by HCP Characteristics:
+
+SELECT 
+    h.Specialty, 
+    h.CNS_HCP_Priority, 
+    h.PED_HCP_Priority, 
+    COUNT(*) as emails_sent, 
+    ROUND(100.0 * SUM(CASE WHEN e.`Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as open_rate, 
+    ROUND(100.0 * SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate 
+FROM email_activity e 
+JOIN hcp_list h ON e.HCP_NPI = h.NPI 
+WHERE e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND e.Campaign_Name IS NOT NULL
+GROUP BY h.Specialty, h.CNS_HCP_Priority, h.PED_HCP_Priority 
+HAVING COUNT(*) > 10
+ORDER BY click_rate DESC;
+
+
+3. Template/Subject Performance Comparison:
+
+SELECT 
+    Template_Name,
+    Email_Subject,
+    COUNT(*) as usage_count,
+    ROUND(AVG(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 100.0 ELSE 0 END), 2) as avg_open_rate,
+    ROUND(AVG(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 100.0 ELSE 0 END), 2) as avg_click_rate
+FROM email_activity
+WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY Template_Name, Email_Subject
+HAVING COUNT(*) > 100
+ORDER BY avg_click_rate DESC;
+
+
+4. Market Conditions During Campaign:
+
+SELECT 
+    t.year_month,
+    t.prod_market,
+    SUM(t.trx) as market_trx
+FROM trend_data t
+WHERE t.year_month BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY t.year_month, t.prod_market
+ORDER BY t.year_month;
+
+
+5. Campaign vs Historical Benchmark:
+
+WITH campaign_performance AS (
+    SELECT 
+        Campaign_Name,
+        COUNT(*) as volume,
+        100.0 * SUM(CASE WHEN `Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) as open_rate,
+        100.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) as click_rate
+    FROM email_activity
+    WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+        AND Campaign_Name IS NOT NULL
+    GROUP BY Campaign_Name
+    HAVING COUNT(*) > 100
+)
+SELECT 
+    Campaign_Name,
+    volume,
+    ROUND(open_rate, 2) as open_rate,
+    ROUND(click_rate, 2) as click_rate,
+    ROUND(open_rate - AVG(open_rate) OVER(), 2) as open_rate_vs_avg,
+    ROUND(click_rate - AVG(click_rate) OVER(), 2) as click_rate_vs_avg
+FROM campaign_performance
+ORDER BY click_rate_vs_avg DESC
+LIMIT 50;
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 4: 
+Which <channel> or <tactic> delivered the highest ROI last year?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1. Channel ROI Rankings (using scoring system):
+
+SELECT 
+    Category as channel,
+    Sub_Category as tactic,
+    Vendor,
+    ROI as roi_score,
+    Engagement_Rate,
+    Cost_H_M_L as cost_level,
+    CPM
+FROM marketing_vendor_and_channel
+WHERE ROI = (SELECT MAX(ROI) FROM marketing_vendor_and_channel)
+ORDER BY ROI DESC, Engagement_Rate DESC;
+
+
+2. Email Campaign ROI Proxy (Performance/Volume):
+
+SELECT 
+    YEAR(`Created_Date-Time`) as year,
+    Campaign_Name,
+    COUNT(*) as emails_sent,
+    SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as total_clicks,
+    ROUND(100.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as ctr,
+    -- Proxy ROI: clicks per 1000 emails (assuming similar costs)
+    ROUND(1000.0 * SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as roi_proxy
+FROM email_activity
+WHERE YEAR(`Created_Date-Time`) = EXTRACT(YEAR FROM CURRENT_DATE) - 1
+GROUP BY year, Campaign_Name
+ORDER BY roi_proxy DESC
+LIMIT 10;
+
+
+3. Sales Activity ROI Analysis (HCP Reach Efficiency):
+
+WITH sales_metrics AS (
+    SELECT 
+        Call_Activity_Type as tactic,
+        COUNT(DISTINCT Call_ID) as total_calls,
+        COUNT(DISTINCT NPI) as unique_hcps,
+        COUNT(DISTINCT CASE WHEN Call_Type = 'Detail with Sample' THEN Call_ID END) as sample_calls
+    FROM sales_rep_call_activity
+    WHERE YEAR(`Call_Date`) = EXTRACT(YEAR FROM CURRENT_DATE) - 1
+    GROUP BY Call_Activity_Type
+)
+SELECT 
+    tactic,
+    total_calls,
+    unique_hcps,
+    ROUND(100.0 * unique_hcps / total_calls, 2) as hcp_efficiency_rate,
+    ROUND(100.0 * sample_calls / total_calls, 2) as sample_rate
+FROM sales_metrics
+ORDER BY hcp_efficiency_rate DESC;
+
+
+4. Attribution Analysis - Linking Activities to Prescriptions:
+
+WITH activity_prescriptions AS (
+    SELECT 
+        s.Call_Activity_Type,
+        COUNT(DISTINCT s.Call_ID) as activities,
+        COUNT(DISTINCT p.prescriber_npi) as prescribing_hcps,
+        SUM(p.total_trx) as total_prescriptions
+    FROM sales_rep_call_activity s
+    JOIN hcp_prescribing_activity p 
+        ON s.NPI = p.prescriber_npi 
+        AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+    WHERE s.Call_Date BETWEEN '2024-01-01' AND '2024-12-31'
+    GROUP BY s.Call_Activity_Type
+)
+SELECT 
+    Call_Activity_Type as tactic,
+    activities,
+    prescribing_hcps,
+    total_prescriptions,
+    ROUND(total_prescriptions / activities, 2) as prescriptions_per_activity
+FROM activity_prescriptions
+ORDER BY prescriptions_per_activity DESC;
+
+
+5. Sample Distribution ROI: (Can't finish running query, TLE. Revision below)
+
+WITH sample_impact AS (
+    SELECT 
+        COUNT(DISTINCT s.HCP_Name) as sampled_hcps,
+        SUM(s.Quantity) as total_samples,
+        COUNT(DISTINCT p.prescriber_npi) as prescribing_sampled_hcps,
+        SUM(p.total_trx) as prescriptions_from_sampled
+    FROM sample_activity s
+    JOIN hcp_list h ON s.HCP_Name = CONCAT(h.First_Name, ' ', h.Last_Name)
+    LEFT JOIN hcp_prescribing_activity p 
+        ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN s.Sample_Date AND DATE_ADD(s.Sample_Date, INTERVAL 60 DAY)
+    WHERE s.Sample_Date BETWEEN '2024-01-01' AND '2024-12-31'
+)
+SELECT 
+    'Sample Distribution' as channel,
+    total_samples,
+    sampled_hcps,
+    prescribing_sampled_hcps,
+    ROUND(100.0 * prescribing_sampled_hcps / sampled_hcps, 2) as conversion_rate,
+    ROUND(prescriptions_from_sampled / total_samples, 2) as prescriptions_per_sample
+FROM sample_impact;
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 5: 
+Identify the best-performing marketing asset by <HCP type> <patient type>
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1. Email Performance by HCP Type:
+
+SELECT 
+    h.Specialty as hcp_type,
+    h.Degree as hcp_degree,
+    e.Template_Name as marketing_asset,
+    e.Email_Subject,
+    COUNT(*) as volume,
+    ROUND(100.0 * SUM(CASE WHEN e.`Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as open_rate,
+    ROUND(100.0 * SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate
+FROM email_activity e
+JOIN hcp_list h ON e.HCP_NPI = h.NPI
+WHERE e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY h.Specialty, h.Degree, e.Template_Name, e.Email_Subject
+HAVING COUNT(*) > 50
+ORDER BY click_rate DESC
+LIMIT 100;
+
+
+2. Sales Activity Performance by HCP Priority:
+
+SELECT 
+    CASE 
+        WHEN h.CNS_HCP_Priority IS NOT NULL THEN CONCAT('CNS Priority ', h.CNS_HCP_Priority)
+        WHEN h.PED_HCP_Priority IS NOT NULL THEN CONCAT('PED Priority ', h.PED_HCP_Priority)
+        ELSE 'Unclassified'
+    END as hcp_segment,
+    s.Call_Activity_Type as marketing_asset,
+    s.Detailed_Products,
+    COUNT(DISTINCT s.Call_ID) as activities,
+    COUNT(DISTINCT s.NPI) as unique_hcps
+FROM sales_rep_call_activity s
+JOIN hcp_list h ON s.NPI = h.NPI
+WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY hcp_segment, s.Call_Activity_Type, s.Detailed_Products
+ORDER BY activities DESC
+LIMIT 100;
+
+
+3. Marketing Asset Performance by Patient Type (Adult vs Pediatric):
+
+WITH asset_performance AS (
+    SELECT 
+        e.Template_Name as asset,
+        CASE 
+            WHEN e.Template_Name LIKE '%Child%' OR e.Template_Name LIKE '%Ped%' THEN 'Pediatric'
+            WHEN h.PED_HCP_Priority IS NOT NULL THEN 'Pediatric'
+            ELSE 'Adult'
+        END as patient_type,
+        COUNT(*) as volume,
+        SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as clicks
+    FROM email_activity e
+    LEFT JOIN hcp_list h ON e.HCP_NPI = h.NPI
+    WHERE e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY e.Template_Name, patient_type
+)
+SELECT 
+    asset,
+    patient_type,
+    volume,
+    clicks,
+    ROUND(100.0 * clicks / volume, 2) as click_rate
+FROM asset_performance
+WHERE volume > 100
+ORDER BY patient_type, click_rate DESC;
+
+
+4. Product Detail Performance by HCP Specialty:
+
+WITH product_performance AS (
+    SELECT 
+        h.Specialty,
+        CASE 
+            WHEN s.Detailed_Products LIKE '%Cotempla%' THEN 'Cotempla XR-ODT'
+            WHEN s.Detailed_Products LIKE '%Adzenys%' THEN 'Adzenys XR-ODT'
+            WHEN s.Detailed_Products LIKE '%Karbinal%' THEN 'Karbinal ER'
+            ELSE 'Other'
+        END as product_asset,
+        COUNT(DISTINCT s.Call_ID) as details,
+        COUNT(DISTINCT p.prescriber_npi) as converting_hcps,
+        SUM(p.total_trx) as resulting_prescriptions
+    FROM sales_rep_call_activity s
+    JOIN hcp_list h ON s.NPI = h.NPI
+    LEFT JOIN hcp_prescribing_activity p 
+        ON s.NPI = p.prescriber_npi
+        AND p.product_name LIKE CONCAT('%', 
+            CASE 
+                WHEN s.Detailed_Products LIKE '%Cotempla%' THEN 'Cotempla'
+                WHEN s.Detailed_Products LIKE '%Adzenys%' THEN 'Adzenys'
+                ELSE ''
+            END, '%')
+        AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+    WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, product_asset
+)
+SELECT 
+    Specialty as hcp_type,
+    product_asset,
+    details,
+    converting_hcps,
+    ROUND(100.0 * converting_hcps / NULLIF(details, 0), 2) as conversion_rate,
+    ROUND(resulting_prescriptions / NULLIF(details, 0), 2) as prescriptions_per_detail
+FROM product_performance
+ORDER BY hcp_type, conversion_rate DESC;
+
+
+5. Combined View - Best Asset by HCP/Patient Segment:
+
+SELECT 
+    h.Specialty as hcp_specialty,
+    CASE 
+        WHEN h.CNS_HCP_Priority = 'A' OR h.PED_HCP_Priority = 'A' THEN 'A-Priority'
+        WHEN h.CNS_HCP_Priority = 'B' OR h.PED_HCP_Priority = 'B' THEN 'B-Priority'
+        ELSE 'C-Priority'
+    END as hcp_priority,
+    CASE 
+        WHEN h.PED_HCP_Priority IS NOT NULL THEN 'Pediatric'
+        ELSE 'Adult'
+    END as patient_focus,
+    e.Template_Name as top_email_asset,
+    COUNT(*) as emails_sent,
+    ROUND(100.0 * SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate
+FROM email_activity e
+JOIN hcp_list h ON e.HCP_NPI = h.NPI
+WHERE e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY h.Specialty, hcp_priority, patient_focus, e.Template_Name
+HAVING COUNT(*) > 20
+ORDER BY hcp_specialty, hcp_priority, click_rate DESC;
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 6: 
+What <channels> <content> are most likely to resonate with <X Customer>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1. Channel Preference by HCP Specialty:
+
+WITH channel_engagement AS (
+    -- Email engagement
+    SELECT h.Specialty, 'Email' as channel, COUNT(DISTINCT e.HCP_NPI) as engaged_hcps
+    FROM email_activity e
+    JOIN hcp_list h ON e.HCP_NPI = h.NPI
+    WHERE e.`Clicked_Date-Time` IS NOT NULL 
+    AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty
+    
+    UNION ALL
+    
+    -- Sales engagement
+    SELECT h.Specialty, 'Sales Call' as channel, COUNT(DISTINCT s.NPI) as engaged_hcps
+    FROM sales_rep_call_activity s
+    JOIN hcp_list h ON s.NPI = h.NPI
+    WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty
+    
+    UNION ALL
+    
+    -- Webinar engagement
+    SELECT h.Specialty, 'Webinar' as channel, COUNT(DISTINCT w.npi) as engaged_hcps
+    FROM webinar w
+    JOIN hcp_list h ON w.npi = h.NPI
+    WHERE w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty
+)
+SELECT 
+    Specialty as customer_segment,
+    channel,
+    engaged_hcps,
+    RANK() OVER (PARTITION BY Specialty ORDER BY engaged_hcps DESC) as channel_rank
+FROM channel_engagement
+WHERE Specialty IS NOT NULL
+ORDER BY Specialty, channel_rank;
+
+
+2. Content Performance by HCP Priority Tier:
+
+SELECT 
+    CASE 
+        WHEN h.CNS_HCP_Priority = 'A' THEN 'CNS A-Priority'
+        WHEN h.CNS_HCP_Priority = 'B' THEN 'CNS B-Priority'
+        WHEN h.PED_HCP_Priority = 'A' THEN 'PED A-Priority'
+        WHEN h.PED_HCP_Priority = 'B' THEN 'PED B-Priority'
+        ELSE 'C-Priority'
+    END as customer_tier,
+    e.Template_Name as content,
+    COUNT(*) as exposures,
+    ROUND(100.0 * SUM(CASE WHEN e.`Opened_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as open_rate,
+    ROUND(100.0 * SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*), 2) as click_rate
+FROM email_activity e
+JOIN hcp_list h ON e.HCP_NPI = h.NPI
+WHERE e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY customer_tier, e.Template_Name
+HAVING COUNT(*) > 50
+ORDER BY customer_tier, click_rate DESC;
+
+
+3. Product Interest by Customer Type:
+
+WITH product_engagement AS (
+    SELECT 
+        h.Specialty,
+        h.Degree,
+        CASE 
+            WHEN s.Detailed_Products LIKE '%Cotempla%' THEN 'Cotempla XR-ODT'
+            WHEN s.Detailed_Products LIKE '%Adzenys%' THEN 'Adzenys XR-ODT'
+            WHEN s.Detailed_Products LIKE '%Karbinal%' THEN 'Karbinal ER'
+            ELSE 'Other'
+        END as product_content,
+        COUNT(DISTINCT s.Call_ID) as interactions,
+        COUNT(DISTINCT s.NPI) as unique_customers
+    FROM sales_rep_call_activity s
+    JOIN hcp_list h ON s.NPI = h.NPI
+    WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, h.Degree, product_content
+)
+SELECT 
+    CONCAT(Specialty, ' - ', Degree) as customer_profile,
+    product_content,
+    interactions,
+    unique_customers,
+    ROUND(interactions / unique_customers, 2) as avg_interactions_per_customer
+FROM product_engagement
+WHERE unique_customers > 10
+ORDER BY customer_profile, avg_interactions_per_customer DESC;
+
+
+4. Call Activity Type Preference by Location:
+
+SELECT 
+    h.State,
+    s.Call_Activity_Type as engagement_type,
+    COUNT(DISTINCT s.NPI) as hcps_engaged,
+    COUNT(s.Call_ID) as total_activities,
+    ROUND(COUNT(s.Call_ID) / COUNT(DISTINCT s.NPI), 2) as activities_per_hcp
+FROM sales_rep_call_activity s
+JOIN hcp_list h ON s.NPI = h.NPI
+WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY h.State, s.Call_Activity_Type
+HAVING COUNT(DISTINCT s.NPI) > 20
+ORDER BY h.State, hcps_engaged DESC;
+
+
+5. Multi-Channel Customer Journey Analysis:
+
+WITH customer_touchpoints AS (
+    SELECT 
+        h.NPI,
+        h.Specialty,
+        h.CNS_HCP_Priority,
+        h.PED_HCP_Priority,
+        COUNT(DISTINCT e.Campaign_ID) as email_campaigns,
+        COUNT(DISTINCT s.Call_ID) as sales_calls,
+        COUNT(DISTINCT w.Date_of_Webinar) as webinars_attended,
+        COUNT(DISTINCT sa.Sample_Date) as sample_interactions
+    FROM hcp_list h
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI 
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN sales_rep_call_activity s ON h.NPI = s.NPI 
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN webinar w ON h.NPI = w.npi 
+        AND w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN sample_activity sa ON CONCAT(h.First_Name, ' ', h.Last_Name) = sa.HCP_Name 
+        AND sa.Sample_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.NPI, h.Specialty, h.CNS_HCP_Priority, h.PED_HCP_Priority
+)
+SELECT 
+    Specialty as customer_type,
+    CASE 
+        WHEN email_campaigns > 0 AND sales_calls > 0 THEN 'Multi-Channel'
+        WHEN email_campaigns > 0 THEN 'Email-Preferred'
+        WHEN sales_calls > 0 THEN 'Sales-Preferred'
+        ELSE 'Low-Engagement'
+    END as engagement_pattern,
+    COUNT(*) as customer_count,
+    ROUND(AVG(email_campaigns), 2) as avg_email_touches,
+    ROUND(AVG(sales_calls), 2) as avg_sales_touches,
+    ROUND(AVG(webinars_attended), 2) as avg_webinars,
+    ROUND(AVG(sample_interactions), 2) as avg_samples
+FROM customer_touchpoints
+GROUP BY Specialty, engagement_pattern
+ORDER BY Specialty, customer_count DESC;
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 7: 
+How many conversions came from <channel> or <tactic>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+All channel performance for the given time period.
+
+
+1. Email Channel Conversions:
+
+WITH email_conversions AS (
+    SELECT 
+        e.Campaign_Name,
+        COUNT(DISTINCT e.HCP_NPI) as clicked_hcps,
+        COUNT(DISTINCT p.prescriber_npi) as converting_hcps,
+        SUM(p.total_trx) as total_prescriptions
+    FROM email_activity e
+    JOIN hcp_prescribing_activity p 
+        ON e.HCP_NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN DATE(e.`Clicked_Date-Time`) 
+            AND DATE_ADD(DATE(e.`Clicked_Date-Time`), INTERVAL 30 DAY)
+    WHERE e.`Clicked_Date-Time` IS NOT NULL
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY e.Campaign_Name
+)
+SELECT 
+    'Email' as channel,
+    Campaign_Name,
+    clicked_hcps,
+    converting_hcps as conversions,
+    ROUND(100.0 * converting_hcps / clicked_hcps, 2) as conversion_rate,
+    total_prescriptions
+FROM email_conversions
+WHERE clicked_hcps > 10
+ORDER BY conversions DESC
+LIMIT 50;
+
+
+2. Sales Call Conversions by Activity Type:
+
+SELECT 
+    s.Call_Activity_Type as tactic,
+    COUNT(DISTINCT s.NPI) as contacted_hcps,
+    COUNT(DISTINCT p.prescriber_npi) as conversions,
+    ROUND(100.0 * COUNT(DISTINCT p.prescriber_npi) / COUNT(DISTINCT s.NPI), 2) as conversion_rate,
+    SUM(p.total_trx) as total_prescriptions
+FROM sales_rep_call_activity s
+LEFT JOIN hcp_prescribing_activity p 
+    ON s.NPI = p.prescriber_npi
+    AND p.date_submitted BETWEEN s.Call_Date 
+        AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY s.Call_Activity_Type
+ORDER BY conversions DESC;
+
+
+3. Sample Distribution Conversions:
+
+WITH sample_conversions AS (
+    SELECT 
+        sa.Sample_Product,
+        COUNT(DISTINCT sa.HCP_Name) as sampled_hcps,
+        COUNT(DISTINCT p.prescriber_npi) as converting_hcps,
+        SUM(sa.Quantity) as samples_distributed,
+        SUM(p.total_trx) as prescriptions_generated
+    FROM sample_activity sa
+    JOIN hcp_list h ON sa.HCP_Name = CONCAT(h.First_Name, ' ', h.Last_Name)
+    LEFT JOIN hcp_prescribing_activity p 
+        ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN sa.Sample_Date 
+            AND DATE_ADD(sa.Sample_Date, INTERVAL 60 DAY)
+        AND p.product_name LIKE CONCAT('%', 
+            CASE 
+                WHEN sa.Sample_Product LIKE 'Karbinal%' THEN 'Karbinal'
+                ELSE sa.Sample_Product
+            END, '%')
+    WHERE sa.Sample_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY sa.Sample_Product
+)
+SELECT 
+    'Sample Distribution' as channel,
+    Sample_Product,
+    sampled_hcps,
+    converting_hcps as conversions,
+    ROUND(100.0 * converting_hcps / sampled_hcps, 2) as conversion_rate,
+    prescriptions_generated
+FROM sample_conversions;
+
+
+4. Webinar Conversions:
+
+SELECT 
+    'Webinar' as channel,
+    w.Date_of_Webinar,
+    COUNT(DISTINCT w.npi) as attendees,
+    COUNT(DISTINCT p.prescriber_npi) as conversions,
+    ROUND(100.0 * COUNT(DISTINCT p.prescriber_npi) / COUNT(DISTINCT w.npi), 2) as conversion_rate,
+    SUM(p.total_trx) as prescriptions_generated
+FROM webinar w
+LEFT JOIN hcp_prescribing_activity p 
+    ON w.npi = p.prescriber_npi
+    AND p.date_submitted BETWEEN w.Date_of_Webinar 
+        AND DATE_ADD(w.Date_of_Webinar, INTERVAL 30 DAY)
+WHERE w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY w.Date_of_Webinar
+ORDER BY conversions DESC;
+
+
+5. Multi-Touch Attribution Summary:
+
+WITH channel_conversions AS (
+    -- Email conversions
+    SELECT 'Email' as channel, COUNT(DISTINCT p.prescriber_npi) as conversions
+    FROM email_activity e
+    JOIN hcp_prescribing_activity p 
+        ON e.HCP_NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN DATE(e.`Clicked_Date-Time`) AND DATE_ADD(DATE(e.`Clicked_Date-Time`), INTERVAL 30 DAY)
+    WHERE e.`Clicked_Date-Time` IS NOT NULL AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    
+    UNION ALL
+    
+    -- Sales conversions
+    SELECT 'Sales Calls' as channel, COUNT(DISTINCT p.prescriber_npi) as conversions
+    FROM sales_rep_call_activity s
+    JOIN hcp_prescribing_activity p 
+        ON s.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+    WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    
+    UNION ALL
+    
+    -- Webinar conversions
+    SELECT 'Webinars' as channel, COUNT(DISTINCT p.prescriber_npi) as conversions
+    FROM webinar w
+    JOIN hcp_prescribing_activity p 
+        ON w.npi = p.prescriber_npi
+        AND p.date_submitted BETWEEN w.Date_of_Webinar AND DATE_ADD(w.Date_of_Webinar, INTERVAL 30 DAY)
+    WHERE w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+)
+SELECT 
+    channel,
+    conversions,
+    ROUND(100.0 * conversions / SUM(conversions) OVER(), 2) as pct_of_total_conversions
+FROM channel_conversions
+ORDER BY conversions DESC;
+
+
+6. Product-Specific Conversion Tracking:
+
+SELECT 
+    CASE 
+        WHEN s.Detailed_Products LIKE '%Cotempla%' THEN 'Cotempla XR-ODT'
+        WHEN s.Detailed_Products LIKE '%Adzenys%' THEN 'Adzenys XR-ODT'
+        ELSE 'Other'
+    END as product_detailed,
+    COUNT(DISTINCT s.NPI) as hcps_detailed,
+    COUNT(DISTINCT p.prescriber_npi) as conversions,
+    ROUND(100.0 * COUNT(DISTINCT p.prescriber_npi) / COUNT(DISTINCT s.NPI), 2) as conversion_rate
+FROM sales_rep_call_activity s
+LEFT JOIN hcp_prescribing_activity p 
+    ON s.NPI = p.prescriber_npi
+    AND p.product_name LIKE CONCAT('%', 
+        CASE 
+            WHEN s.Detailed_Products LIKE '%Cotempla%' THEN 'Cotempla'
+            WHEN s.Detailed_Products LIKE '%Adzenys%' THEN 'Adzenys'
+            ELSE ''
+        END, '%')
+    AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    AND s.Detailed_Products IS NOT NULL
+GROUP BY product_detailed
+ORDER BY conversion_rate DESC;
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 8: 
+Why were sales from the <period X> higher/lower than sales from <period Y>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Sales actuals
+
+
+1. Sales Volume Comparison by Product:
+
+WITH period_sales AS (
+    SELECT 
+        product_name,
+        CASE 
+            WHEN date_submitted BETWEEN '2023-01-01' AND '2023-12-31' THEN 'Period 2023'
+            WHEN date_submitted BETWEEN '2024-01-01' AND '2024-12-31' THEN 'Period 2024'
+        END as period,
+        SUM(total_trx) as total_prescriptions,
+        SUM(total_units) as total_units,
+        COUNT(DISTINCT prescriber_npi) as active_prescribers
+    FROM hcp_prescribing_activity
+    WHERE date_submitted BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY product_name, period
+)
+SELECT 
+    product_name,
+    MAX(CASE WHEN period = 'Period 2023' THEN total_prescriptions END) as period_2023_sales,
+    MAX(CASE WHEN period = 'Period 2024' THEN total_prescriptions END) as period_2024_sales,
+    MAX(CASE WHEN period = 'Period 2024' THEN total_prescriptions END) - 
+    MAX(CASE WHEN period = 'Period 2023' THEN total_prescriptions END) as variance,
+    ROUND(100.0 * (MAX(CASE WHEN period = 'Period 2024' THEN total_prescriptions END) - 
+    MAX(CASE WHEN period = 'Period 2023' THEN total_prescriptions END)) / 
+    NULLIF(MAX(CASE WHEN period = 'Period 2023' THEN total_prescriptions END), 0), 2) as pct_change
+FROM period_sales
+GROUP BY product_name
+ORDER BY ABS(variance) DESC;
+
+
+2. Prescriber Activity Analysis:
+
+WITH prescriber_comparison AS (
+    SELECT 
+        CASE 
+            WHEN date_submitted BETWEEN '2023-01-01' AND '2023-12-31' THEN 'Period 2023'
+            WHEN date_submitted BETWEEN '2024-01-01' AND '2024-12-31' THEN 'Period 2024'
+        END as period,
+        COUNT(DISTINCT prescriber_npi) as active_prescribers,
+        COUNT(DISTINCT CASE WHEN total_trx >= 5 THEN prescriber_npi END) as high_volume_prescribers,
+        AVG(total_trx) as avg_trx_per_prescriber
+    FROM hcp_prescribing_activity
+    WHERE date_submitted BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY period
+)
+SELECT 
+    'Prescriber Metrics' as metric,
+    MAX(CASE WHEN period = 'Period 2023' THEN active_prescribers END) as period_2023_prescribers,
+    MAX(CASE WHEN period = 'Period 2024' THEN active_prescribers END) as period_2024_prescribers,
+    MAX(CASE WHEN period = 'Period 2023' THEN high_volume_prescribers END) as period_2023_high_volume,
+    MAX(CASE WHEN period = 'Period 2024' THEN high_volume_prescribers END) as period_2024_high_volume,
+    ROUND(MAX(CASE WHEN period = 'Period 2023' THEN avg_trx_per_prescriber END), 2) as period_2023_avg_trx,
+    ROUND(MAX(CASE WHEN period = 'Period 2024' THEN avg_trx_per_prescriber END), 2) as period_2024_avg_trx
+FROM prescriber_comparison;
+
+
+3. Sales Activity Impact:
+
+WITH sales_activity_comparison AS (
+    SELECT 
+        CASE 
+            WHEN Call_Date BETWEEN '2023-01-01' AND '2023-12-31' THEN 'Period 2023'
+            WHEN Call_Date BETWEEN '2024-01-01' AND '2024-12-31' THEN 'Period 2024'
+        END as period,
+        COUNT(DISTINCT Call_ID) as total_calls,
+        COUNT(DISTINCT NPI) as hcps_contacted,
+        COUNT(DISTINCT CASE WHEN Call_Type = 'Detail with Sample' THEN Call_ID END) as sample_calls
+    FROM sales_rep_call_activity
+    WHERE Call_Date BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY period
+)
+SELECT 
+    'Sales Activity' as driver,
+    MAX(CASE WHEN period = 'Period 2023' THEN total_calls END) as period_2023_calls,
+    MAX(CASE WHEN period = 'Period 2024' THEN total_calls END) as period_2024_calls,
+    MAX(CASE WHEN period = 'Period 2023' THEN hcps_contacted END) as period_2023_reach,
+    MAX(CASE WHEN period = 'Period 2024' THEN hcps_contacted END) as period_2024_reach,
+    ROUND(100.0 * (MAX(CASE WHEN period = 'Period 2024' THEN total_calls END) - 
+    MAX(CASE WHEN period = 'Period 2023' THEN total_calls END)) / 
+    NULLIF(MAX(CASE WHEN period = 'Period 2023' THEN total_calls END), 0), 2) as call_volume_change_pct
+FROM sales_activity_comparison;
+
+
+4. Market Dynamics Analysis:
+
+WITH market_comparison AS (
+    SELECT 
+        prod_market,
+        SUM(CASE WHEN `year_month` BETWEEN '2023-01-01' AND '2023-12-31' THEN trx END) as period_2023_market_trx,
+        SUM(CASE WHEN `year_month` BETWEEN '2024-01-01' AND '2024-12-31' THEN trx END) as period_2024_market_trx,
+        AVG(CASE WHEN `year_month` BETWEEN '2023-01-01' AND '2023-12-31' THEN trx END) as period_2023_avg_monthly,
+        AVG(CASE WHEN `year_month` BETWEEN '2024-01-01' AND '2024-12-31' THEN trx END) as period_2024_avg_monthly
+    FROM trend_data
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY prod_market
+)
+SELECT 
+    prod_market,
+    ROUND(period_2023_market_trx, 0) as period_2023_volume,
+    ROUND(period_2024_market_trx, 0) as period_2024_volume,
+    ROUND(100.0 * (period_2024_market_trx - period_2023_market_trx) / NULLIF(period_2023_market_trx, 0), 2) as market_growth_pct,
+    ROUND(period_2024_avg_monthly - period_2023_avg_monthly, 0) as avg_monthly_change
+FROM market_comparison
+ORDER BY ABS(market_growth_pct) DESC;
+
+
+5. Geographic Performance Shifts:
+
+WITH geo_performance AS (
+    SELECT 
+        h.State,
+        CASE 
+            WHEN p.date_submitted BETWEEN '2023-01-01' AND '2023-12-31' THEN 'Period 2023'
+            WHEN p.date_submitted BETWEEN '2024-01-01' AND '2024-12-31' THEN 'Period 2024'
+        END as period,
+        SUM(p.total_trx) as state_sales,
+        COUNT(DISTINCT p.prescriber_npi) as prescriber_count
+    FROM hcp_prescribing_activity p
+    JOIN hcp_list h ON p.prescriber_npi = h.NPI
+    WHERE p.date_submitted BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY h.State, period
+)
+SELECT 
+    State,
+    MAX(CASE WHEN period = 'Period 2023' THEN state_sales END) as period_2023_sales,
+    MAX(CASE WHEN period = 'Period 2024' THEN state_sales END) as period_2024_sales,
+    MAX(CASE WHEN period = 'Period 2024' THEN state_sales END) - 
+    MAX(CASE WHEN period = 'Period 2023' THEN state_sales END) as sales_change,
+    ROUND(100.0 * (MAX(CASE WHEN period = 'Period 2024' THEN state_sales END) - 
+    MAX(CASE WHEN period = 'Period 2023' THEN state_sales END)) / 
+    NULLIF(MAX(CASE WHEN period = 'Period 2023' THEN state_sales END), 0), 2) as pct_change
+FROM geo_performance
+GROUP BY State
+HAVING MAX(CASE WHEN period = 'Period 2023' THEN state_sales END) > 100
+ORDER BY sales_change DESC
+LIMIT 20;
+
+
+6. Payer Mix Impact (Medicaid):
+
+WITH payer_comparison AS (
+    SELECT 
+        product_group_name,
+        SUM(CASE WHEN `year_month` BETWEEN '2023-01-01' AND '2023-12-31' THEN total_trx END) as period_2023_medicaid_trx,
+        SUM(CASE WHEN `year_month` BETWEEN '2024-01-01' AND '2024-12-31' THEN total_trx END) as period_2024_medicaid_trx,
+        COUNT(DISTINCT CASE WHEN `year_month` BETWEEN '2023-01-01' AND '2023-12-31' THEN payerplan_id END) as period_2023_plans,
+        COUNT(DISTINCT CASE WHEN `year_month` BETWEEN '2024-01-01' AND '2024-12-31' THEN payerplan_id END) as period_2024_plans
+    FROM gen1_gen2_liquid_medicaid_trx
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2024-12-31'
+    GROUP BY product_group_name
+)
+SELECT 
+    product_group_name,
+    ROUND(period_2023_medicaid_trx, 0) as period_2023_medicaid_volume,
+    ROUND(period_2024_medicaid_trx, 0) as period_2024_medicaid_volume,
+    period_2024_plans - period_2023_plans as plan_coverage_change,
+    ROUND(100.0 * (period_2024_medicaid_trx - period_2023_medicaid_trx) / NULLIF(period_2023_medicaid_trx, 0), 2) as medicaid_growth_pct
+FROM payer_comparison
+ORDER BY ABS(medicaid_growth_pct) DESC;
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 9: 
+How many new patients were generated during <time period>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+New Patient Start results from 3rd party
+
+
+1. New Prescriptions (NRx) as Proxy for New Patients:
+
+SELECT 
+    prod_market as product,
+    SUM(nrx) as new_prescriptions,
+    SUM(trx) as total_prescriptions,
+    ROUND(100.0 * SUM(nrx) / NULLIF(SUM(trx), 0), 2) as new_rx_percentage,
+    COUNT(DISTINCT `year_month`) as months_tracked
+FROM trend_data
+WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND nrx IS NOT NULL
+GROUP BY prod_market
+ORDER BY new_prescriptions DESC;
+
+
+2. New Prescriptions by Patient Age Group:
+
+SELECT 
+    patient_age as age_group,
+    prod_market as product,
+    SUM(nrx) as new_prescriptions,
+    ROUND(AVG(nrx), 2) as avg_monthly_new_rx
+FROM trend_data
+WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND nrx IS NOT NULL
+GROUP BY patient_age, prod_market
+ORDER BY new_prescriptions DESC;
+
+
+3. First-Time Prescribers (Proxy for New Patient Acquisition):
+
+WITH prescriber_first_rx AS (
+    SELECT 
+        prescriber_npi,
+        product_name,
+        MIN(date_submitted) as first_prescription_date
+    FROM hcp_prescribing_activity
+    GROUP BY prescriber_npi, product_name
+)
+SELECT 
+    product_name,
+    COUNT(DISTINCT prescriber_npi) as total_prescribers,
+    SUM(CASE WHEN first_prescription_date BETWEEN '2023-01-01' AND '2025-06-30' 
+        THEN 1 ELSE 0 END) as period_new_prescribers,
+    ROUND(100.0 * SUM(CASE WHEN first_prescription_date BETWEEN '2023-01-01' AND '2025-06-30' 
+        THEN 1 ELSE 0 END) / COUNT(DISTINCT prescriber_npi), 2) as new_prescriber_pct
+FROM prescriber_first_rx
+GROUP BY product_name
+ORDER BY period_new_prescribers DESC;
+
+
+4. New vs Total Prescription Trends:
+
+SELECT 
+    `year_month`,
+    SUM(nrx) as monthly_new_rx,
+    SUM(trx) as monthly_total_rx,
+    ROUND(100.0 * SUM(nrx) / NULLIF(SUM(trx), 0), 2) as new_patient_rate
+FROM trend_data
+WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND market = 'ADHD'
+GROUP BY `year_month`
+ORDER BY `year_month`;
+
+
+5. Coverage Area New Prescription Analysis:
+
+SELECT 
+    cns_coverage,
+    ped_coverage,
+    SUM(nrx) as new_prescriptions,
+    SUM(trx) as total_prescriptions,
+    COUNT(DISTINCT `year_month`) as active_months
+FROM trend_data
+WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    AND nrx IS NOT NULL
+GROUP BY cns_coverage, ped_coverage
+ORDER BY new_prescriptions DESC;
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 10: 
+What were our expenses <time period>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Budget actuals
+
+
+1. Email Campaign Activity Volume:
+
+SELECT 
+    DATE_FORMAT(`Created_Date-Time`, '%Y-%m-01') as month,
+    COUNT(DISTINCT Campaign_ID) as campaigns_run,
+    COUNT(*) as total_emails_sent,
+    COUNT(DISTINCT Template_ID) as unique_templates
+FROM email_activity
+WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY month
+ORDER BY month;
+
+
+2. Sales Activity Volume:
+
+SELECT 
+    DATE_FORMAT(Call_Date, '%Y-%m-01') as month,
+    Call_Activity_Type,
+    COUNT(DISTINCT Call_ID) as activity_count,
+    COUNT(DISTINCT NPI) as unique_hcps
+FROM sales_rep_call_activity
+WHERE Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY month, Call_Activity_Type
+ORDER BY month, activity_count DESC;
+
+
+3. Sample Distribution Volume:
+
+SELECT 
+    DATE_FORMAT(Sample_Date, '%Y-%m-01') as month,
+    Sample_Product,
+    COUNT(DISTINCT Call_ID) as distribution_events,
+    SUM(Quantity) as total_samples_distributed,
+    COUNT(DISTINCT HCP_Name) as unique_recipients
+FROM sample_activity
+WHERE Sample_Date BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY month, Sample_Product
+ORDER BY month;
+
+
+4. Webinar Events:
+
+SELECT 
+    DATE_FORMAT(Date_of_Webinar, '%Y-%m-01') as month,
+    COUNT(DISTINCT Date_of_Webinar) as webinar_count,
+    COUNT(*) as total_registrations,
+    COUNT(DISTINCT npi) as unique_attendees
+FROM webinar
+WHERE Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY month
+ORDER BY month;
+
+
+5. Marketing Channel Cost Indicators:
+
+SELECT 
+    Category,
+    Sub_Category,
+    Vendor,
+    Cost_H_M_L as cost_level,
+    CPM as cost_per_thousand_score,
+    CASE 
+        WHEN Cost_H_M_L >= 6 THEN 'High Cost'
+        WHEN Cost_H_M_L >= 4 THEN 'Medium Cost'
+        ELSE 'Low Cost'
+    END as cost_tier
+FROM marketing_vendor_and_channel
+ORDER BY Cost_H_M_L DESC;
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 11: 
+Why did we miss our revenue benchmarks <time period>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Revenue goals, budgets, other brand specific KPIs
+
+
+1. Prescription Volume vs Prior Period:
+
+WITH volume_trends AS (
+    SELECT 
+        DATE_FORMAT(date_submitted, '%Y-%m-01') as month,
+        product_name,
+        SUM(total_trx) as monthly_trx,
+        LAG(SUM(total_trx)) OVER (PARTITION BY product_name ORDER BY DATE_FORMAT(date_submitted, '%Y-%m-01')) as prior_month_trx
+    FROM hcp_prescribing_activity
+    WHERE date_submitted BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY month, product_name
+)
+SELECT 
+    month,
+    product_name,
+    monthly_trx,
+    prior_month_trx,
+    ROUND(100.0 * (monthly_trx - prior_month_trx) / NULLIF(prior_month_trx, 0), 2) as growth_rate
+FROM volume_trends
+ORDER BY month, product_name;
+
+
+2. Market Share Analysis:
+
+WITH market_performance AS (
+    SELECT 
+        `year_month`,
+        prod_market,
+        SUM(CASE WHEN prod_market LIKE '%Cotempla%' OR prod_market LIKE '%Adzenys%' THEN trx ELSE 0 END) as company_trx,
+        SUM(CASE WHEN prod_market = 'ADHD MPH Market' THEN trx ELSE 0 END) as total_market_trx
+    FROM trend_data
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY `year_month`, prod_market
+)
+SELECT 
+    `year_month`,
+    ROUND(100.0 * SUM(company_trx) / NULLIF(MAX(total_market_trx), 0), 2) as market_share_pct,
+    LAG(ROUND(100.0 * SUM(company_trx) / NULLIF(MAX(total_market_trx), 0), 2)) 
+        OVER (ORDER BY `year_month`) as prior_month_share
+FROM market_performance
+GROUP BY `year_month`
+ORDER BY `year_month`;
+
+
+3. Sales Force Productivity Gap:
+
+WITH rep_productivity AS (
+    SELECT 
+        DATE_FORMAT(s.Call_Date, '%Y-%m-01') as month,
+        COUNT(DISTINCT s.Call_ID) as total_calls,
+        COUNT(DISTINCT s.NPI) as hcps_reached,
+        COUNT(DISTINCT p.prescriber_npi) as converting_hcps,
+        SUM(p.total_trx) as resulting_trx
+    FROM sales_rep_call_activity s
+    LEFT JOIN hcp_prescribing_activity p 
+        ON s.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+    WHERE s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY month
+)
+SELECT 
+    month,
+    total_calls,
+    hcps_reached,
+    converting_hcps,
+    ROUND(100.0 * converting_hcps / NULLIF(hcps_reached, 0), 2) as conversion_rate,
+    ROUND(resulting_trx / NULLIF(total_calls, 0), 2) as trx_per_call
+FROM rep_productivity
+ORDER BY month;
+
+
+4. Geographic Coverage Gaps:
+
+WITH coverage_analysis AS (
+    SELECT 
+        h.State,
+        COUNT(DISTINCT h.NPI) as total_hcps,
+        COUNT(DISTINCT s.NPI) as contacted_hcps,
+        COUNT(DISTINCT p.prescriber_npi) as prescribing_hcps,
+        SUM(p.total_trx) as state_trx
+    FROM hcp_list h
+    LEFT JOIN sales_rep_call_activity s 
+        ON h.NPI = s.NPI
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN hcp_prescribing_activity p 
+        ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN '2023-01-01' AND '2025-06-30'
+    WHERE h.CNS_HCP_Priority IS NOT NULL OR h.PED_HCP_Priority IS NOT NULL
+    GROUP BY h.State
+)
+SELECT 
+    State,
+    total_hcps,
+    contacted_hcps,
+    ROUND(100.0 * contacted_hcps / NULLIF(total_hcps, 0), 2) as coverage_rate,
+    prescribing_hcps,
+    ROUND(100.0 * prescribing_hcps / NULLIF(contacted_hcps, 0), 2) as conversion_rate,
+    COALESCE(state_trx, 0) as total_prescriptions
+FROM coverage_analysis
+WHERE total_hcps > 100
+ORDER BY coverage_rate ASC
+LIMIT 20;
+
+
+5. Payer Access Issues:
+
+SELECT 
+    payer_name,
+    plan_name,
+    SUM(total_trx) as medicaid_trx,
+    COUNT(DISTINCT `year_month`) as active_months,
+    ROUND(AVG(total_trx), 2) as avg_monthly_trx
+FROM gen1_gen2_liquid_medicaid_trx
+WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+GROUP BY payer_name, plan_name
+HAVING SUM(total_trx) < 10  -- Low-performing plans
+ORDER BY medicaid_trx ASC
+LIMIT 20;
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 12: 
+What is the optimal number of speaker programs a provider should attend each year for maximum impact on writing behavior.
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Speaker Program attendance and writing behavior for the given pre/post period
+
+
+1. Webinar Attendance Frequency Analysis:
+
+WITH hcp_attendance AS (
+    SELECT 
+        npi,
+        COUNT(DISTINCT Date_of_Webinar) as programs_attended,
+        MIN(Date_of_Webinar) as first_attendance,
+        MAX(Date_of_Webinar) as last_attendance
+    FROM webinar
+    WHERE Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+        AND npi IS NOT NULL
+    GROUP BY npi
+),
+prescribing_impact AS (
+    SELECT 
+        w.npi,
+        w.programs_attended,
+        SUM(CASE WHEN p.date_submitted < w.first_attendance THEN p.total_trx ELSE 0 END) as pre_attendance_trx,
+        SUM(CASE WHEN p.date_submitted >= w.first_attendance THEN p.total_trx ELSE 0 END) as post_attendance_trx
+    FROM hcp_attendance w
+    LEFT JOIN hcp_prescribing_activity p ON w.npi = p.prescriber_npi
+    GROUP BY w.npi, w.programs_attended
+)
+SELECT 
+    programs_attended,
+    COUNT(DISTINCT npi) as hcp_count,
+    ROUND(AVG(pre_attendance_trx), 2) as avg_pre_trx,
+    ROUND(AVG(post_attendance_trx), 2) as avg_post_trx,
+    ROUND(AVG(post_attendance_trx - pre_attendance_trx), 2) as avg_trx_lift,
+    ROUND(100.0 * AVG(post_attendance_trx - pre_attendance_trx) / NULLIF(AVG(pre_attendance_trx), 0), 2) as pct_lift
+FROM prescribing_impact
+GROUP BY programs_attended
+ORDER BY programs_attended;
+
+
+2. Pre/Post Writing Behavior Analysis:
+
+WITH attendance_cohorts AS (
+    SELECT 
+        npi,
+        COUNT(DISTINCT Date_of_Webinar) as total_programs,
+        MIN(Date_of_Webinar) as first_program_date
+    FROM webinar
+    WHERE npi IS NOT NULL
+    GROUP BY npi
+),
+writing_behavior AS (
+    SELECT 
+        a.npi,
+        a.total_programs,
+        -- 90 days pre-period
+        SUM(CASE WHEN p.date_submitted BETWEEN DATE_SUB(a.first_program_date, INTERVAL 90 DAY) 
+            AND a.first_program_date THEN p.total_trx ELSE 0 END) as pre_90d_trx,
+        -- 90 days post-period
+        SUM(CASE WHEN p.date_submitted BETWEEN a.first_program_date 
+            AND DATE_ADD(a.first_program_date, INTERVAL 90 DAY) THEN p.total_trx ELSE 0 END) as post_90d_trx
+    FROM attendance_cohorts a
+    LEFT JOIN hcp_prescribing_activity p ON a.npi = p.prescriber_npi
+    GROUP BY a.npi, a.total_programs
+)
+SELECT 
+    CASE 
+        WHEN total_programs = 1 THEN '1 Program'
+        WHEN total_programs = 2 THEN '2 Programs'
+        WHEN total_programs = 3 THEN '3 Programs'
+        WHEN total_programs >= 4 THEN '4+ Programs'
+    END as attendance_group,
+    COUNT(*) as hcp_count,
+    ROUND(AVG(pre_90d_trx), 2) as avg_pre_period_trx,
+    ROUND(AVG(post_90d_trx), 2) as avg_post_period_trx,
+    ROUND(AVG(post_90d_trx - pre_90d_trx), 2) as avg_lift,
+    ROUND(100.0 * AVG(post_90d_trx - pre_90d_trx) / NULLIF(AVG(pre_90d_trx), 0), 2) as pct_change
+FROM writing_behavior
+WHERE pre_90d_trx > 0  -- Only HCPs who were prescribing before
+GROUP BY attendance_group
+ORDER BY 
+    CASE 
+        WHEN attendance_group = '1 Program' THEN 1
+        WHEN attendance_group = '2 Programs' THEN 2
+        WHEN attendance_group = '3 Programs' THEN 3
+        ELSE 4
+    END;
+
+
+3. Optimal Attendance Frequency - Diminishing Returns Analysis:
+
+WITH program_impact AS (
+    SELECT 
+        w.npi,
+        COUNT(DISTINCT w.Date_of_Webinar) as programs_attended,
+        SUM(p.total_trx) as total_prescriptions,
+        COUNT(DISTINCT p.date_submitted) as prescribing_days
+    FROM webinar w
+    JOIN hcp_prescribing_activity p 
+        ON w.npi = p.prescriber_npi
+        AND p.date_submitted BETWEEN w.Date_of_Webinar 
+            AND DATE_ADD(w.Date_of_Webinar, INTERVAL 60 DAY)
+    GROUP BY w.npi
+)
+SELECT 
+    programs_attended,
+    COUNT(*) as hcp_count,
+    ROUND(AVG(total_prescriptions), 2) as avg_prescriptions,
+    ROUND(AVG(prescribing_days), 2) as avg_active_days,
+    ROUND(AVG(total_prescriptions) / programs_attended, 2) as trx_per_program,
+    LAG(AVG(total_prescriptions)) OVER (ORDER BY programs_attended) as prev_avg_trx,
+    ROUND(AVG(total_prescriptions) - LAG(AVG(total_prescriptions)) OVER (ORDER BY programs_attended), 2) as incremental_impact
+FROM program_impact
+WHERE programs_attended <= 10
+GROUP BY programs_attended
+HAVING COUNT(*) >= 5  -- Minimum sample size
+ORDER BY programs_attended;
+
+
+4. Time Between Programs Impact:
+
+WITH program_intervals AS (
+    SELECT 
+        npi,
+        Date_of_Webinar,
+        LAG(Date_of_Webinar) OVER (PARTITION BY npi ORDER BY Date_of_Webinar) as prev_program,
+        DATEDIFF(Date_of_Webinar, LAG(Date_of_Webinar) OVER (PARTITION BY npi ORDER BY Date_of_Webinar)) as days_between
+    FROM webinar
+    WHERE npi IS NOT NULL
+),
+interval_impact AS (
+    SELECT 
+        i.npi,
+        i.days_between,
+        SUM(p.total_trx) as prescriptions_after
+    FROM program_intervals i
+    JOIN hcp_prescribing_activity p 
+        ON i.npi = p.prescriber_npi
+        AND p.date_submitted BETWEEN i.Date_of_Webinar 
+            AND DATE_ADD(i.Date_of_Webinar, INTERVAL 30 DAY)
+    WHERE i.days_between IS NOT NULL
+    GROUP BY i.npi, i.days_between
+)
+SELECT 
+    CASE 
+        WHEN days_between <= 30 THEN '0-30 days'
+        WHEN days_between <= 60 THEN '31-60 days'
+        WHEN days_between <= 90 THEN '61-90 days'
+        WHEN days_between <= 180 THEN '91-180 days'
+        ELSE '180+ days'
+    END as interval_group,
+    COUNT(*) as occurrences,
+    ROUND(AVG(prescriptions_after), 2) as avg_post_program_trx
+FROM interval_impact
+GROUP BY interval_group
+ORDER BY 
+    CASE 
+        WHEN interval_group = '0-30 days' THEN 1
+        WHEN interval_group = '31-60 days' THEN 2
+        WHEN interval_group = '61-90 days' THEN 3
+        WHEN interval_group = '91-180 days' THEN 4
+        ELSE 5
+    END;
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 13: 
+How much money should we spend in <DTC> <NPP> to maintain level of NBRxs? 
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Historical data, audience insights, and campaign performance metrics (mpressions, clicks, conversions, and ROI, and provide insights into which campaigns, ad creatives, and audience segments) to predict the most cost-effective bids and allocate budgets to the best-performing ads
+
+
+1. NBRx Baseline and Trends:
+
+WITH nbrx_trends AS (
+    SELECT 
+        `year_month`,
+        prod_market,
+        SUM(nrx) as monthly_nbrx,
+        AVG(SUM(nrx)) OVER (ORDER BY `year_month` ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) as rolling_3mo_avg
+    FROM trend_data
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+        AND market = 'ADHD'
+    GROUP BY `year_month`, prod_market
+)
+SELECT 
+    `year_month`,
+    prod_market,
+    monthly_nbrx,
+    rolling_3mo_avg,
+    monthly_nbrx - LAG(monthly_nbrx) OVER (PARTITION BY prod_market ORDER BY `year_month`) as mom_change
+FROM nbrx_trends
+ORDER BY `year_month`, prod_market;
+
+
+2. Channel Effectiveness (ROI Proxy):
+
+SELECT 
+    Category as channel_type,
+    Sub_Category as tactic,
+    AVG(ROI) as avg_roi_score,
+    AVG(Engagement_Rate) as avg_engagement,
+    AVG(CPM) as avg_cpm_score,
+    CASE 
+        WHEN Category LIKE '%Digital%' OR Category LIKE '%Online%' THEN 'DTC'
+        WHEN Category LIKE '%HCP%' OR Category LIKE '%Professional%' THEN 'NPP'
+        ELSE 'Mixed'
+    END as promotion_type
+FROM marketing_vendor_and_channel
+GROUP BY Category, Sub_Category
+ORDER BY avg_roi_score DESC;
+
+
+3. Email Campaign Performance (NPP Proxy):
+
+WITH campaign_metrics AS (
+    SELECT 
+        Campaign_Name,
+        Template_Name,
+        COUNT(*) as reach,
+        SUM(CASE WHEN `Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as clicks,
+        COUNT(DISTINCT HCP_NPI) as unique_hcps,
+        DATE_FORMAT(`Created_Date-Time`, '%Y-%m-01') as campaign_month
+    FROM email_activity
+    WHERE `Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY Campaign_Name, Template_Name, campaign_month
+),
+campaign_impact AS (
+    SELECT 
+        c.campaign_month,
+        SUM(c.clicks) as total_clicks,
+        SUM(t.nrx) as month_nbrx,
+        ROUND(SUM(t.nrx) / NULLIF(SUM(c.clicks), 0), 2) as nbrx_per_click
+    FROM campaign_metrics c
+    JOIN trend_data t ON DATE_FORMAT(t.`year_month`, '%Y-%m-01') = c.campaign_month
+    GROUP BY c.campaign_month
+)
+SELECT 
+    campaign_month,
+    total_clicks,
+    month_nbrx,
+    nbrx_per_click,
+    -- Estimated cost per NBRx (would need actual spend data)
+    'Requires spend data' as cost_per_nbrx
+FROM campaign_impact
+ORDER BY campaign_month;
+
+
+4. Audience Segment Performance:
+
+WITH segment_performance AS (
+    SELECT 
+        h.Specialty as audience_segment,
+        CASE 
+            WHEN h.CNS_HCP_Priority IN ('A','B') OR h.PED_HCP_Priority IN ('A','B') 
+            THEN 'High Priority'
+            ELSE 'Standard'
+        END as segment_value,
+        COUNT(DISTINCT e.HCP_NPI) as reached,
+        SUM(CASE WHEN e.`Clicked_Date-Time` IS NOT NULL THEN 1 ELSE 0 END) as engaged,
+        COUNT(DISTINCT p.prescriber_npi) as prescribers
+    FROM hcp_list h
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN hcp_prescribing_activity p ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, segment_value
+)
+SELECT 
+    audience_segment,
+    segment_value,
+    reached,
+    engaged,
+    ROUND(100.0 * engaged / NULLIF(reached, 0), 2) as engagement_rate,
+    prescribers,
+    ROUND(100.0 * prescribers / NULLIF(reached, 0), 2) as conversion_rate
+FROM segment_performance
+WHERE reached > 100
+ORDER BY conversion_rate DESC;
+
+
+5. Predictive NBRx Maintenance Model (Simplified):
+
+WITH monthly_activity AS (
+    SELECT 
+        DATE_FORMAT(date_submitted, '%Y-%m-01') as month,
+        SUM(total_trx) as total_rx,
+        COUNT(DISTINCT prescriber_npi) as active_prescribers,
+        SUM(CASE WHEN total_trx = 1 THEN 1 ELSE 0 END) as new_rx_count
+    FROM hcp_prescribing_activity
+    WHERE date_submitted BETWEEN DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+        AND '2025-06-30'
+    GROUP BY month
+),
+activity_correlation AS (
+    SELECT 
+        month,
+        total_rx,
+        new_rx_count,
+        active_prescribers,
+        LAG(new_rx_count, 1) OVER (ORDER BY month) as prev_month_nrx,
+        AVG(new_rx_count) OVER (ORDER BY month ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) as trailing_3mo_avg
+    FROM monthly_activity
+)
+SELECT 
+    month,
+    new_rx_count as nbrx,
+    trailing_3mo_avg,
+    active_prescribers,
+    ROUND(new_rx_count / NULLIF(active_prescribers, 0), 2) as nbrx_per_prescriber,
+    -- Budget requirement would be: (target_nbrx / nbrx_per_engagement) * cost_per_engagement
+    'Requires cost data for budget calculation' as required_budget
+FROM activity_correlation
+WHERE month >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 6 MONTH)
+ORDER BY month;
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 14: 
+To reach a different customer segment, should we include <channel x> in this year’s marketing campaign?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Historical data, audience insights, and campaign performance metrics (mpressions, clicks, conversions, and ROI, and provide insights into which campaigns, ad creatives, and audience segments) to predict the most cost-effective bids and allocate budgets to the best-performing ads
+
+
+1. Current Channel Coverage by Segment:
+
+WITH segment_channel_reach AS (
+    -- Email channel reach
+    SELECT 
+        h.Specialty as customer_segment,
+        h.State,
+        'Email' as channel,
+        COUNT(DISTINCT h.NPI) as total_segment_size,
+        COUNT(DISTINCT e.HCP_NPI) as reached_in_segment
+    FROM hcp_list h
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI 
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, h.State
+    
+    UNION ALL
+    
+    -- Sales channel reach
+    SELECT 
+        h.Specialty,
+        h.State,
+        'Field Sales' as channel,
+        COUNT(DISTINCT h.NPI) as total_segment_size,
+        COUNT(DISTINCT s.NPI) as reached_in_segment
+    FROM hcp_list h
+    LEFT JOIN sales_rep_call_activity s ON h.NPI = s.NPI 
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, h.State
+    
+    UNION ALL
+    
+    -- Webinar channel reach
+    SELECT 
+        h.Specialty,
+        h.State,
+        'Webinar' as channel,
+        COUNT(DISTINCT h.NPI) as total_segment_size,
+        COUNT(DISTINCT w.npi) as reached_in_segment
+    FROM hcp_list h
+    LEFT JOIN webinar w ON h.NPI = w.npi 
+        AND w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, h.State
+)
+SELECT 
+    customer_segment,
+    channel,
+    SUM(total_segment_size) as segment_size,
+    SUM(reached_in_segment) as reached,
+    ROUND(100.0 * SUM(reached_in_segment) / SUM(total_segment_size), 2) as penetration_rate
+FROM segment_channel_reach
+GROUP BY customer_segment, channel
+ORDER BY customer_segment, penetration_rate DESC;
+
+
+2. Underserved Segment Identification:
+
+WITH segment_coverage AS (
+    SELECT 
+        h.Specialty,
+        h.Degree,
+        CASE 
+            WHEN h.CNS_HCP_Priority = 'A' THEN 'CNS A-Priority'
+            WHEN h.PED_HCP_Priority = 'A' THEN 'PED A-Priority'
+            WHEN h.CNS_HCP_Priority = 'B' OR h.PED_HCP_Priority = 'B' THEN 'B-Priority'
+            ELSE 'C-Priority'
+        END as priority_segment,
+        COUNT(DISTINCT h.NPI) as total_hcps,
+        COUNT(DISTINCT e.HCP_NPI) as email_reached,
+        COUNT(DISTINCT s.NPI) as sales_reached,
+        COUNT(DISTINCT w.npi) as webinar_reached
+    FROM hcp_list h
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI 
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN sales_rep_call_activity s ON h.NPI = s.NPI 
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN webinar w ON h.NPI = w.npi 
+        AND w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.Specialty, h.Degree, priority_segment
+)
+SELECT 
+    CONCAT(Specialty, ' - ', Degree) as segment,
+    priority_segment,
+    total_hcps,
+    email_reached + sales_reached + webinar_reached as any_channel_reached,
+    ROUND(100.0 * (email_reached + sales_reached + webinar_reached) / total_hcps, 2) as total_coverage_pct,
+    total_hcps - (email_reached + sales_reached + webinar_reached) as unreached_count
+FROM segment_coverage
+WHERE total_hcps > 50
+ORDER BY unreached_count DESC
+LIMIT 20;
+
+
+3. Channel Effectiveness by Segment Type:
+
+WITH channel_performance AS (
+    SELECT 
+        h.Specialty,
+        CASE 
+            WHEN e.Campaign_ID IS NOT NULL THEN 'Email'
+            WHEN s.Call_ID IS NOT NULL THEN 'Sales'
+            WHEN w.npi IS NOT NULL THEN 'Webinar'
+        END as channel,
+        COUNT(DISTINCT COALESCE(e.HCP_NPI, s.NPI, w.npi)) as engaged_hcps,
+        COUNT(DISTINCT p.prescriber_npi) as converting_hcps
+    FROM hcp_list h
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI 
+        AND e.`Clicked_Date-Time` IS NOT NULL
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN sales_rep_call_activity s ON h.NPI = s.NPI 
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN webinar w ON h.NPI = w.npi 
+        AND w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN hcp_prescribing_activity p 
+        ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN '2023-01-01' AND '2025-06-30'
+    WHERE (e.Campaign_ID IS NOT NULL OR s.Call_ID IS NOT NULL OR w.npi IS NOT NULL)
+    GROUP BY h.Specialty, channel
+)
+SELECT 
+    Specialty as segment,
+    channel,
+    engaged_hcps,
+    converting_hcps,
+    ROUND(100.0 * converting_hcps / NULLIF(engaged_hcps, 0), 2) as conversion_rate
+FROM channel_performance
+WHERE engaged_hcps > 20
+ORDER BY segment, conversion_rate DESC;
+
+
+4. Geographic White Space Analysis:
+
+WITH geographic_coverage AS (
+    SELECT 
+        h.State,
+        COUNT(DISTINCT h.NPI) as state_hcp_count,
+        COUNT(DISTINCT CASE WHEN s.NPI IS NOT NULL THEN h.NPI END) as sales_covered,
+        COUNT(DISTINCT CASE WHEN e.HCP_NPI IS NOT NULL THEN h.NPI END) as email_covered,
+        COUNT(DISTINCT CASE WHEN w.npi IS NOT NULL THEN h.NPI END) as webinar_covered,
+        SUM(p.total_trx) as state_prescriptions
+    FROM hcp_list h
+    LEFT JOIN sales_rep_call_activity s ON h.NPI = s.NPI 
+        AND s.Call_Date BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN email_activity e ON h.NPI = e.HCP_NPI 
+        AND e.`Created_Date-Time` BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN webinar w ON h.NPI = w.npi 
+        AND w.Date_of_Webinar BETWEEN '2023-01-01' AND '2025-06-30'
+    LEFT JOIN hcp_prescribing_activity p ON h.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY h.State
+)
+SELECT 
+    State,
+    state_hcp_count,
+    ROUND(100.0 * sales_covered / state_hcp_count, 2) as sales_coverage_pct,
+    ROUND(100.0 * email_covered / state_hcp_count, 2) as email_coverage_pct,
+    ROUND(100.0 * webinar_covered / state_hcp_count, 2) as webinar_coverage_pct,
+    state_hcp_count - GREATEST(sales_covered, email_covered, webinar_covered) as max_unreached,
+    COALESCE(state_prescriptions, 0) as current_prescriptions
+FROM geographic_coverage
+WHERE state_hcp_count > 100
+ORDER BY max_unreached DESC
+LIMIT 15;
+
+
+5. Channel Mix Recommendation:
+
+SELECT 
+    Category as potential_channel,
+    Sub_Category as tactic,
+    Audience,
+    AVG(Total_Reach) as reach_score,
+    AVG(Targeted_Audience) as targeting_score,
+    AVG(Engagement_Rate) as engagement_score,
+    AVG(ROI) as roi_score,
+    AVG(Cost_H_M_L) as cost_score,
+    CASE 
+        WHEN AVG(ROI) >= 6 AND AVG(Cost_H_M_L) <= 4 THEN 'High Priority'
+        WHEN AVG(ROI) >= 5 AND AVG(Cost_H_M_L) <= 5 THEN 'Medium Priority'
+        ELSE 'Low Priority'
+    END as recommendation
+FROM marketing_vendor_and_channel
+WHERE Category NOT IN ('Email', 'Field Sales', 'Webinar')
+GROUP BY Category, Sub_Category, Audience
+ORDER BY roi_score DESC, cost_score ASC;
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 15: 
+What are the projected <sales> <expenses? of <period>?
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Sales forecase vs actuals
+
+
+1. Historical Sales Trend Analysis (Volume-Based):
+
+WITH monthly_sales AS (
+    SELECT 
+        DATE_FORMAT(date_submitted, '%Y-%m-01') as month,
+        product_name,
+        SUM(total_trx) as monthly_trx,
+        SUM(total_units) as monthly_units,
+        COUNT(DISTINCT prescriber_npi) as active_prescribers
+    FROM hcp_prescribing_activity
+    WHERE date_submitted >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 24 MONTH)
+    GROUP BY month, product_name
+),
+sales_trends AS (
+    SELECT 
+        month,
+        product_name,
+        monthly_trx,
+        AVG(monthly_trx) OVER (PARTITION BY product_name ORDER BY month ROWS BETWEEN 11 PRECEDING AND CURRENT ROW) as rolling_12mo_avg,
+        monthly_trx - LAG(monthly_trx, 12) OVER (PARTITION BY product_name ORDER BY month) as yoy_change,
+        ROUND(100.0 * (monthly_trx - LAG(monthly_trx, 12) OVER (PARTITION BY product_name ORDER BY month)) / 
+            NULLIF(LAG(monthly_trx, 12) OVER (PARTITION BY product_name ORDER BY month), 0), 2) as yoy_growth_pct
+    FROM monthly_sales
+)
+SELECT 
+    month,
+    product_name,
+    monthly_trx as actual_volume,
+    rolling_12mo_avg,
+    yoy_growth_pct,
+    -- Simple projection: current volume * (1 + avg growth rate)
+    monthly_trx * (1 + AVG(yoy_growth_pct/100.0) OVER (PARTITION BY product_name)) as projected_volume
+FROM sales_trends
+WHERE month >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+ORDER BY product_name, month;
+
+
+2. Seasonality Pattern Analysis:
+
+WITH seasonal_data AS (
+    SELECT 
+        MONTH(date_submitted) as month_num,
+        MONTHNAME(date_submitted) as month_name,
+        product_name,
+        AVG(total_trx) as avg_monthly_trx,
+        STDDEV(total_trx) as trx_stddev
+    FROM hcp_prescribing_activity
+    WHERE date_submitted >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 36 MONTH)
+    GROUP BY month_num, month_name, product_name
+)
+SELECT 
+    month_num,
+    month_name,
+    product_name,
+    ROUND(avg_monthly_trx, 2) as avg_monthly_trx,
+    ROUND(100.0 * avg_monthly_trx / NULLIF(AVG(avg_monthly_trx) OVER (PARTITION BY product_name), 0), 2) as seasonality_index
+FROM seasonal_data
+ORDER BY product_name, month_num;
+
+
+3. Activity-Based Expense Drivers:
+
+WITH monthly_activity AS (
+    SELECT 
+        DATE_FORMAT(Call_Date, '%Y-%m-01') as month,
+        COUNT(DISTINCT Call_ID) as sales_calls
+    FROM sales_rep_call_activity
+    WHERE Call_Date >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY DATE_FORMAT(Call_Date, '%Y-%m-01')
+),
+email_activity_summary AS (
+    SELECT 
+        DATE_FORMAT(`Created_Date-Time`, '%Y-%m-01') as month,
+        COUNT(DISTINCT Campaign_ID) as email_campaigns,
+        COUNT(*) / 1000 as email_thousands_sent
+    FROM email_activity
+    WHERE `Created_Date-Time` >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY DATE_FORMAT(`Created_Date-Time`, '%Y-%m-01')
+),
+webinar_summary AS (
+    SELECT 
+        DATE_FORMAT(Date_of_Webinar, '%Y-%m-01') as month,
+        COUNT(DISTINCT Date_of_Webinar) as webinars
+    FROM webinar
+    WHERE Date_of_Webinar >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY DATE_FORMAT(Date_of_Webinar, '%Y-%m-01')
+),
+sample_summary AS (
+    SELECT 
+        DATE_FORMAT(Sample_Date, '%Y-%m-01') as month,
+        SUM(Quantity) as samples_distributed
+    FROM sample_activity
+    WHERE Sample_Date >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY DATE_FORMAT(Sample_Date, '%Y-%m-01')
+)
+SELECT 
+    COALESCE(m.month, e.month, w.month, s.month) as month,
+    COALESCE(m.sales_calls, 0) as sales_calls,
+    COALESCE(e.email_campaigns, 0) as email_campaigns,
+    COALESCE(e.email_thousands_sent, 0) as email_thousands_sent,
+    COALESCE(w.webinars, 0) as webinars,
+    COALESCE(s.samples_distributed, 0) as samples_distributed,
+    'Requires unit cost data' as projected_sales_expense,
+    'Requires unit cost data' as projected_marketing_expense,
+    'Requires unit cost data' as projected_sample_expense
+FROM monthly_activity m
+LEFT JOIN email_activity_summary e ON m.month = e.month
+LEFT JOIN webinar_summary w ON m.month = w.month
+LEFT JOIN sample_summary s ON m.month = s.month
+ORDER BY month;
+
+
+4. Sales Productivity Forecast:
+
+WITH rep_productivity AS (
+    SELECT 
+        CONCAT(YEAR(s.Call_Date), '-Q', QUARTER(s.Call_Date)) as quarter,
+        COUNT(DISTINCT s.Call_ID) as total_calls,
+        COUNT(DISTINCT s.NPI) as hcps_reached,
+        SUM(p.total_trx) as resulting_trx,
+        ROUND(SUM(p.total_trx) / COUNT(DISTINCT s.Call_ID), 2) as trx_per_call
+    FROM sales_rep_call_activity s
+    LEFT JOIN hcp_prescribing_activity p 
+        ON s.NPI = p.prescriber_npi
+        AND p.date_submitted BETWEEN s.Call_Date AND DATE_ADD(s.Call_Date, INTERVAL 30 DAY)
+    WHERE s.Call_Date >= DATE_SUB(CURRENT_DATE, INTERVAL 24 MONTH)
+    GROUP BY CONCAT(YEAR(s.Call_Date), '-Q', QUARTER(s.Call_Date))
+)
+SELECT 
+    quarter,
+    total_calls,
+    resulting_trx as actual_sales_volume,
+    trx_per_call,
+    AVG(trx_per_call) OVER (ORDER BY quarter ROWS BETWEEN 3 PRECEDING AND CURRENT ROW) as avg_productivity,
+    total_calls * AVG(trx_per_call) OVER (ORDER BY quarter ROWS BETWEEN 3 PRECEDING AND CURRENT ROW) as projected_sales_volume
+FROM rep_productivity
+ORDER BY quarter DESC
+LIMIT 8;
+
+
+5. Market Share Projection:
+
+WITH market_trends AS (
+    SELECT 
+        `year_month`,
+        SUM(CASE WHEN prod_market LIKE '%Cotempla%' OR prod_market LIKE '%Adzenys%' 
+            THEN trx ELSE 0 END) as company_trx,
+        SUM(CASE WHEN prod_market = 'ADHD MPH Market' THEN trx ELSE 0 END) as total_market_trx,
+        ROUND(100.0 * SUM(CASE WHEN prod_market LIKE '%Cotempla%' OR prod_market LIKE '%Adzenys%' 
+            THEN trx ELSE 0 END) / NULLIF(SUM(CASE WHEN prod_market = 'ADHD MPH Market' 
+            THEN trx ELSE 0 END), 0), 2) as market_share_pct
+    FROM trend_data
+    WHERE `year_month` >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 24 MONTH)
+    GROUP BY `year_month`
+),
+share_projection AS (
+    SELECT 
+        `year_month`,
+        company_trx,
+        total_market_trx,
+        market_share_pct,
+        AVG(market_share_pct) OVER (ORDER BY `year_month` ROWS BETWEEN 5 PRECEDING AND CURRENT ROW) as avg_share
+    FROM market_trends
+)
+SELECT 
+    `year_month`,
+    company_trx as actual_volume,
+    market_share_pct as actual_share,
+    -- Simplified projection without REGR_SLOPE
+    total_market_trx * avg_share / 100.0 as projected_volume_3mo,
+    avg_share as projected_share_3mo
+FROM share_projection
+WHERE `year_month` >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+ORDER BY `year_month`;
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+KBQ 16: 
+Predict existing patient switch propensity to competitive brands (branded or generic).
+
+What inputs are required to generate the analysis needed to create the desired outputs and reports: 
+Budget vs actuals
+
+
+1. Prescriber Switching Behavior Analysis:
+
+WITH prescriber_product_mix AS (
+    SELECT 
+        prescriber_npi,
+        product_name,
+        DATE_FORMAT(date_submitted, '%Y-%m-01') as month,
+        SUM(total_trx) as monthly_trx,
+        SUM(total_trx) / NULLIF(SUM(SUM(total_trx)) OVER (PARTITION BY prescriber_npi, DATE_FORMAT(date_submitted, '%Y-%m-01')), 0) as product_share
+    FROM hcp_prescribing_activity
+    WHERE date_submitted >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY prescriber_npi, product_name, month
+),
+switching_indicators AS (
+    SELECT 
+        prescriber_npi,
+        product_name,
+        month,
+        product_share,
+        LAG(product_share) OVER (PARTITION BY prescriber_npi, product_name ORDER BY month) as prev_share,
+        product_share - LAG(product_share) OVER (PARTITION BY prescriber_npi, product_name ORDER BY month) as share_change
+    FROM prescriber_product_mix
+)
+SELECT 
+    product_name,
+    COUNT(DISTINCT CASE WHEN share_change < -0.1 THEN prescriber_npi END) as prescribers_decreasing,
+    COUNT(DISTINCT CASE WHEN share_change > 0.1 THEN prescriber_npi END) as prescribers_increasing,
+    COUNT(DISTINCT prescriber_npi) as total_prescribers,
+    ROUND(AVG(share_change) * 100, 2) as avg_share_change_pct
+FROM switching_indicators
+WHERE prev_share IS NOT NULL
+GROUP BY product_name
+ORDER BY prescribers_decreasing DESC;
+
+
+2. Generic vs Branded Market Dynamics:
+
+WITH generic_brand_trends AS (
+    SELECT 
+        `year_month`,
+        Product_Gen,
+        product_group_name,
+        SUM(total_trx) as total_prescriptions,
+        LAG(SUM(total_trx), 3) OVER (PARTITION BY Product_Gen ORDER BY `year_month`) as trx_3mo_ago
+    FROM gen1_gen2_liquid_medicaid_trx
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY `year_month`, Product_Gen, product_group_name
+)
+SELECT 
+    `year_month`,
+    Product_Gen as product_generation,
+    SUM(total_prescriptions) as current_volume,
+    SUM(trx_3mo_ago) as volume_3mo_ago,
+    ROUND(100.0 * (SUM(total_prescriptions) - SUM(trx_3mo_ago)) / NULLIF(SUM(trx_3mo_ago), 0), 2) as growth_rate,
+    CASE 
+        WHEN SUM(total_prescriptions) < SUM(trx_3mo_ago) * 0.9 THEN 'High Switch Risk'
+        WHEN SUM(total_prescriptions) < SUM(trx_3mo_ago) * 0.95 THEN 'Medium Switch Risk'
+        ELSE 'Low Switch Risk'
+    END as switch_risk_indicator
+FROM generic_brand_trends
+WHERE trx_3mo_ago IS NOT NULL
+GROUP BY `year_month`, Product_Gen
+ORDER BY `year_month` DESC;
+
+
+3. Market Share Erosion Analysis:
+
+WITH product_market_share AS (
+    SELECT 
+        `year_month`,
+        prod_market,
+        SUM(trx) as product_trx,
+        SUM(SUM(trx)) OVER (PARTITION BY `year_month`) as total_market_trx,
+        100.0 * SUM(trx) / SUM(SUM(trx)) OVER (PARTITION BY `year_month`) as market_share
+    FROM trend_data
+    WHERE market = 'ADHD'
+        AND `year_month` >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 18 MONTH)
+    GROUP BY `year_month`, prod_market
+),
+share_changes AS (
+    SELECT 
+        prod_market,
+        `year_month`,
+        market_share,
+        market_share - LAG(market_share, 6) OVER (PARTITION BY prod_market ORDER BY `year_month`) as share_change_6mo,
+        CASE 
+            WHEN market_share - LAG(market_share, 6) OVER (PARTITION BY prod_market ORDER BY `year_month`) < -2 THEN 'Losing Share'
+            WHEN market_share - LAG(market_share, 6) OVER (PARTITION BY prod_market ORDER BY `year_month`) > 2 THEN 'Gaining Share'
+            ELSE 'Stable'
+        END as market_position
+    FROM product_market_share
+)
+SELECT 
+    prod_market,
+    MAX(market_share) as current_share,
+    MIN(market_share) as min_share_18mo,
+    MAX(market_share) - MIN(market_share) as share_volatility,
+    AVG(share_change_6mo) as avg_6mo_change,
+    COUNT(CASE WHEN market_position = 'Losing Share' THEN 1 END) as months_losing_share
+FROM share_changes
+WHERE share_change_6mo IS NOT NULL
+GROUP BY prod_market
+ORDER BY months_losing_share DESC;
+
+
+4. Prescriber Loyalty Score:
+
+WITH prescriber_consistency AS (
+    SELECT 
+        prescriber_npi,
+        product_name,
+        COUNT(DISTINCT DATE_FORMAT(date_submitted, '%Y-%m-01')) as active_months,
+        SUM(total_trx) as total_prescriptions,
+        STDDEV(total_trx) as prescription_variability,
+        MAX(date_submitted) as last_prescription_date
+    FROM hcp_prescribing_activity
+    WHERE date_submitted >= DATE_SUB(DATE_FORMAT(CURRENT_DATE, '%Y-%m-01'), INTERVAL 12 MONTH)
+    GROUP BY prescriber_npi, product_name
+),
+loyalty_metrics AS (
+    SELECT 
+        product_name,
+        prescriber_npi,
+        active_months,
+        total_prescriptions,
+        CASE 
+            WHEN active_months >= 10 AND prescription_variability < 5 THEN 'High Loyalty'
+            WHEN active_months >= 6 AND prescription_variability < 10 THEN 'Medium Loyalty'
+            ELSE 'Low Loyalty'
+        END as loyalty_tier,
+        DATEDIFF(CURRENT_DATE, last_prescription_date) as days_since_last_rx
+    FROM prescriber_consistency
+)
+SELECT 
+    product_name,
+    loyalty_tier,
+    COUNT(DISTINCT prescriber_npi) as prescriber_count,
+    ROUND(AVG(total_prescriptions), 2) as avg_prescriptions,
+    COUNT(CASE WHEN days_since_last_rx > 60 THEN 1 END) as at_risk_prescribers
+FROM loyalty_metrics
+GROUP BY product_name, loyalty_tier
+ORDER BY product_name, loyalty_tier;
+
+
+5. Payer Coverage Impact on Switching:
+
+WITH payer_coverage_changes AS (
+    SELECT 
+        product_group_name,
+        payer_name,
+        plan_name,
+        MIN(`year_month`) as first_coverage_date,
+        MAX(`year_month`) as last_coverage_date,
+        COUNT(DISTINCT `year_month`) as months_covered,
+        AVG(total_trx) as avg_monthly_trx,
+        STDDEV(total_trx) as trx_volatility
+    FROM gen1_gen2_liquid_medicaid_trx
+    WHERE `year_month` BETWEEN '2023-01-01' AND '2025-06-30'
+    GROUP BY product_group_name, payer_name, plan_name
+)
+SELECT 
+    product_group_name,
+    COUNT(DISTINCT plan_name) as total_plans,
+    COUNT(CASE WHEN months_covered < 6 THEN 1 END) as unstable_coverage_plans,
+    COUNT(CASE WHEN last_coverage_date < '2024-12-01' THEN 1 END) as recently_dropped_plans,
+    ROUND(AVG(trx_volatility), 2) as avg_volatility,
+    CASE 
+        WHEN COUNT(CASE WHEN months_covered < 6 THEN 1 END) > 5 THEN 'High Switch Risk - Coverage Issues'
+        WHEN AVG(trx_volatility) > 10 THEN 'Medium Switch Risk - Volume Volatility'
+        ELSE 'Low Switch Risk'
+    END as payer_switch_risk
+FROM payer_coverage_changes
+GROUP BY product_group_name
+ORDER BY unstable_coverage_plans DESC;
+
+
