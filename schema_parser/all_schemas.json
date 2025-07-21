@@ -1,0 +1,1624 @@
+[
+  {
+    "table_name": "email_activity",
+    "file_name": "email_activity_202507062323.csv",
+    "row_count": 62407,
+    "column_count": 16,
+    "columns": [
+      {
+        "original_name": "Email_Subject",
+        "clean_name": "Email_Subject",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 135,
+        "sample_values": [
+          "Click To Review Your Aytu Information",
+          "Dosing for a Unique ADHD Treatment",
+          "Aytu lunch recap",
+          "Aytu lunch recap",
+          "Aytu lunch recap"
+        ]
+      },
+      {
+        "original_name": "HCP_NPI",
+        "clean_name": "HCP_NPI",
+        "data_type": "REAL",
+        "null_count": 6315,
+        "unique_count": 15110,
+        "sample_values": [
+          "1770297509.0",
+          "1033743455.0",
+          "1336632918.0",
+          "1104296599.0",
+          "1528516374.0"
+        ]
+      },
+      {
+        "original_name": "Email_Tag",
+        "clean_name": "Email_Tag",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 3,
+        "sample_values": [
+          "campaign_email",
+          "campaign_email",
+          "campaign_email",
+          "campaign_email",
+          "campaign_email"
+        ]
+      },
+      {
+        "original_name": "Created_Date-Time",
+        "clean_name": "Created_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 12018,
+        "sample_values": [
+          "2025-02-20 20:26:50",
+          "2025-02-20 19:27:31",
+          "2025-02-20 12:30:06",
+          "2025-02-20 12:30:05",
+          "2025-02-20 12:30:05"
+        ]
+      },
+      {
+        "original_name": "Delivered_Date-Time",
+        "clean_name": "Delivered_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 14420,
+        "sample_values": [
+          "2025-02-20 20:26:54",
+          "2025-02-20 19:27:34",
+          "2025-02-20 12:30:07",
+          "2025-02-20 12:30:07",
+          "2025-02-20 12:30:07"
+        ]
+      },
+      {
+        "original_name": "Opened_Date-Time",
+        "clean_name": "Opened_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 58468,
+        "unique_count": 3570,
+        "sample_values": [
+          "2025-02-20 20:27:28",
+          "2025-02-20 19:29:18",
+          "2025-02-20 12:30:14",
+          "2025-02-18 02:55:22",
+          "2025-02-16 19:35:07"
+        ]
+      },
+      {
+        "original_name": "Clicked_Date-Time",
+        "clean_name": "Clicked_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 61612,
+        "unique_count": 792,
+        "sample_values": [
+          "2025-02-20 20:27:50",
+          "2025-02-11 18:18:46",
+          "2025-02-10 13:10:13",
+          "2025-02-03 18:54:06",
+          "2025-01-29 14:32:11"
+        ]
+      },
+      {
+        "original_name": "Complained_Date-Time",
+        "clean_name": "Complained_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 62334,
+        "unique_count": 70,
+        "sample_values": [
+          "2024-12-23 18:33:14",
+          "2024-11-07 18:02:04",
+          "2024-10-31 23:52:06",
+          "2024-10-22 17:56:52",
+          "2024-11-01 17:05:51"
+        ]
+      },
+      {
+        "original_name": "Bounced_Date-Time",
+        "clean_name": "Bounced_Date_Time",
+        "data_type": "REAL",
+        "null_count": 62407,
+        "unique_count": 0,
+        "sample_values": []
+      },
+      {
+        "original_name": "Dropped_Date-Time",
+        "clean_name": "Dropped_Date_Time",
+        "data_type": "REAL",
+        "null_count": 62407,
+        "unique_count": 0,
+        "sample_values": []
+      },
+      {
+        "original_name": "Failed_Date-Time",
+        "clean_name": "Failed_Date_Time",
+        "data_type": "TEXT",
+        "null_count": 61976,
+        "unique_count": 323,
+        "sample_values": [
+          "2024-08-15 16:44:58",
+          "2024-08-15 16:44:25",
+          "2024-08-15 16:44:23",
+          "2024-08-15 16:44:03",
+          "2024-08-15 16:43:46"
+        ]
+      },
+      {
+        "original_name": "Test",
+        "clean_name": "Test",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "original_name": "Campaign_ID",
+        "clean_name": "Campaign_ID",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 1240,
+        "sample_values": [
+          "31830",
+          "31805",
+          "31531",
+          "31531",
+          "31531"
+        ]
+      },
+      {
+        "original_name": "Campaign_Name",
+        "clean_name": "Campaign_Name",
+        "data_type": "TEXT",
+        "null_count": 7055,
+        "unique_count": 1232,
+        "sample_values": [
+          "Default Quick Share Template - 2025-02-20 14:26:00",
+          "COTEMPLA XR-ODT Dosing Email - 2025-02-20 14:27:00",
+          "Post Lunch Thanks - 2025-02-20 07:30:00",
+          "Post Lunch Thanks - 2025-02-20 07:30:00",
+          "Post Lunch Thanks - 2025-02-20 07:30:00"
+        ]
+      },
+      {
+        "original_name": "Template_ID",
+        "clean_name": "Template_ID",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 57,
+        "sample_values": [
+          "1010",
+          "2248",
+          "1259",
+          "1259",
+          "1259"
+        ]
+      },
+      {
+        "original_name": "Template_Name",
+        "clean_name": "Template_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 57,
+        "sample_values": [
+          "Default Quick Share Template",
+          "COTEMPLA XR-ODT Dosing Email",
+          "Post Lunch Thanks",
+          "Post Lunch Thanks",
+          "Post Lunch Thanks"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "gen1_gen2_liquid_medicaid_trx",
+    "file_name": "gen1_gen2_liquid_medicaid_trx_202507062323.csv",
+    "row_count": 17224,
+    "column_count": 12,
+    "columns": [
+      {
+        "original_name": "product_group_name",
+        "clean_name": "product_group_name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 20,
+        "sample_values": [
+          "Allegra Child",
+          "Allegra Child",
+          "Allegra Child",
+          "Allegra Child",
+          "Allegra Child"
+        ]
+      },
+      {
+        "original_name": "year_month",
+        "clean_name": "year_month",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 12,
+        "sample_values": [
+          "2023-08-01",
+          "2024-02-01",
+          "2024-03-01",
+          "2024-04-01",
+          "2024-05-01"
+        ]
+      },
+      {
+        "original_name": "payer_name",
+        "clean_name": "payer_name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 109,
+        "sample_values": [
+          "UNITED HEALTHCARE",
+          "UNITED HEALTHCARE",
+          "UNITED HEALTHCARE",
+          "UNITED HEALTHCARE",
+          "UNITED HEALTHCARE"
+        ]
+      },
+      {
+        "original_name": "plan_name",
+        "clean_name": "plan_name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 285,
+        "sample_values": [
+          "UHC COMMUNITY PLAN (VA)",
+          "UHC COMMUNITY PLAN (VA)",
+          "UHC COMMUNITY PLAN (VA)",
+          "UHC COMMUNITY PLAN (VA)",
+          "UHC COMMUNITY PLAN (VA)"
+        ]
+      },
+      {
+        "original_name": "model_type",
+        "clean_name": "model_type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 3,
+        "sample_values": [
+          "MGD MEDI",
+          "MGD MEDI",
+          "MGD MEDI",
+          "MGD MEDI",
+          "MGD MEDI"
+        ]
+      },
+      {
+        "original_name": "payerplan_id",
+        "clean_name": "payerplan_id",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 285,
+        "sample_values": [
+          "200870",
+          "200870",
+          "200870",
+          "200870",
+          "200870"
+        ]
+      },
+      {
+        "original_name": "in_ker_first_gen_mkt",
+        "clean_name": "in_ker_first_gen_mkt",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "N",
+          "N",
+          "N",
+          "N",
+          "N"
+        ]
+      },
+      {
+        "original_name": "in_ker_second_gen_mkt",
+        "clean_name": "in_ker_second_gen_mkt",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Y",
+          "Y",
+          "Y",
+          "Y",
+          "Y"
+        ]
+      },
+      {
+        "original_name": "product_group_type",
+        "clean_name": "product_group_type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1,
+        "sample_values": [
+          "LIQUID",
+          "LIQUID",
+          "LIQUID",
+          "LIQUID",
+          "LIQUID"
+        ]
+      },
+      {
+        "original_name": "total_trx",
+        "clean_name": "total_trx",
+        "data_type": "REAL",
+        "null_count": 0,
+        "unique_count": 14084,
+        "sample_values": [
+          "1.00199997425079",
+          "1.89899998903275",
+          "1.99100005626678",
+          "3.00700002908707",
+          "0.967999994754791"
+        ]
+      },
+      {
+        "original_name": "plan_state",
+        "clean_name": "plan_state",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 52,
+        "sample_values": [
+          "VA",
+          "VA",
+          "VA",
+          "VA",
+          "VA"
+        ]
+      },
+      {
+        "original_name": "Product_Gen",
+        "clean_name": "Product_Gen",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "2nd Gen",
+          "2nd Gen",
+          "2nd Gen",
+          "2nd Gen",
+          "2nd Gen"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "hcp_list",
+    "file_name": "hcp_list_202507062323.csv",
+    "row_count": 3580,
+    "column_count": 16,
+    "columns": [
+      {
+        "original_name": "NPI",
+        "clean_name": "NPI",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 3580,
+        "sample_values": [
+          "1003013723",
+          "1003072794",
+          "1003083684",
+          "1003102849",
+          "1003127358"
+        ]
+      },
+      {
+        "original_name": "First_Name",
+        "clean_name": "First_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1542,
+        "sample_values": [
+          "Justin",
+          "Abdulsattar",
+          "Amanda",
+          "Kendra",
+          "Harold"
+        ]
+      },
+      {
+        "original_name": "Minit",
+        "clean_name": "Minit",
+        "data_type": "TEXT",
+        "null_count": 370,
+        "unique_count": 25,
+        "sample_values": [
+          "E",
+          "R",
+          "S",
+          "D",
+          "A"
+        ]
+      },
+      {
+        "original_name": "Last_Name",
+        "clean_name": "Last_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2869,
+        "sample_values": [
+          "Fields",
+          "Zidan",
+          "Lucke",
+          "Cloyd",
+          "O'Brien"
+        ]
+      },
+      {
+        "original_name": "Address1",
+        "clean_name": "Address1",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2467,
+        "sample_values": [
+          "950 N Porter Ave Ste 200",
+          "1845 Cherry St",
+          "12188A N Meridian St Ste 375",
+          "3026 Poplar Level Rd",
+          "4925 Charlestown Rd"
+        ]
+      },
+      {
+        "original_name": "Address2",
+        "clean_name": "Address2",
+        "data_type": "TEXT",
+        "null_count": 3439,
+        "unique_count": 113,
+        "sample_values": [
+          "Professional Bldg",
+          "Ste Oandp",
+          "The Pediatrics Center",
+          "Dupont Medical Center",
+          "Ann & Robert H. Lurie Children's Hospital Of Chicago"
+        ]
+      },
+      {
+        "original_name": "City",
+        "clean_name": "City",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 916,
+        "sample_values": [
+          "Norman",
+          "Montgomery",
+          "Carmel",
+          "Louisville",
+          "New Albany"
+        ]
+      },
+      {
+        "original_name": "State",
+        "clean_name": "State",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 41,
+        "sample_values": [
+          "OK",
+          "AL",
+          "IN",
+          "KY",
+          "IN"
+        ]
+      },
+      {
+        "original_name": "Zip",
+        "clean_name": "Zip",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 1484,
+        "sample_values": [
+          "73071",
+          "36107",
+          "46032",
+          "40217",
+          "47150"
+        ]
+      },
+      {
+        "original_name": "Specialty",
+        "clean_name": "Specialty",
+        "data_type": "TEXT",
+        "null_count": 1,
+        "unique_count": 56,
+        "sample_values": [
+          "IM",
+          "PD",
+          "A",
+          "PD",
+          "P"
+        ]
+      },
+      {
+        "original_name": "Degree",
+        "clean_name": "Degree",
+        "data_type": "TEXT",
+        "null_count": 1,
+        "unique_count": 10,
+        "sample_values": [
+          "MD",
+          "MD",
+          "NP",
+          "MD",
+          "NP"
+        ]
+      },
+      {
+        "original_name": "Can_Share",
+        "clean_name": "Can_Share",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Y",
+          "Y",
+          "Y",
+          "Y",
+          "Y"
+        ]
+      },
+      {
+        "original_name": "Can_Contact",
+        "clean_name": "Can_Contact",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Y",
+          "Y",
+          "Y",
+          "Y",
+          "Y"
+        ]
+      },
+      {
+        "original_name": "CNS_HCP_Priority",
+        "clean_name": "CNS_HCP_Priority",
+        "data_type": "TEXT",
+        "null_count": 1129,
+        "unique_count": 3,
+        "sample_values": [
+          "C",
+          "A",
+          "B",
+          "C",
+          "B"
+        ]
+      },
+      {
+        "original_name": "PED_HCP_Priority",
+        "clean_name": "PED_HCP_Priority",
+        "data_type": "TEXT",
+        "null_count": 3454,
+        "unique_count": 3,
+        "sample_values": [
+          "C",
+          "B",
+          "B",
+          "C",
+          "B"
+        ]
+      },
+      {
+        "original_name": "Karbinal_Target",
+        "clean_name": "Karbinal_Target",
+        "data_type": "TEXT",
+        "null_count": 2528,
+        "unique_count": 2,
+        "sample_values": [
+          "Y",
+          "Y",
+          "Y",
+          "Y",
+          "Y"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "hcp_prescribing_activity",
+    "file_name": "hcp_prescribing_activity_202507062323.csv",
+    "row_count": 553251,
+    "column_count": 6,
+    "columns": [
+      {
+        "original_name": "prescriber_npi",
+        "clean_name": "prescriber_npi",
+        "data_type": "REAL",
+        "null_count": 1198,
+        "unique_count": 20984,
+        "sample_values": [
+          "1003034745",
+          "1003062555",
+          "1003062555",
+          "1003062555",
+          "1003062555"
+        ]
+      },
+      {
+        "original_name": "product_name",
+        "clean_name": "product_name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 9,
+        "sample_values": [
+          "Adzenys XR-ODT",
+          "Adzenys XR-ODT",
+          "Adzenys XR-ODT",
+          "Adzenys XR-ODT",
+          "Adzenys XR-ODT"
+        ]
+      },
+      {
+        "original_name": "date_submitted",
+        "clean_name": "date_submitted",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 609,
+        "sample_values": [
+          "2024-05-14 00:00:00",
+          "2024-02-15 00:00:00",
+          "2024-02-28 00:00:00",
+          "2024-03-27 00:00:00",
+          "2024-04-29 00:00:00"
+        ]
+      },
+      {
+        "original_name": "cns_ic_exclision_specialty",
+        "clean_name": "cns_ic_exclision_specialty",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "original_name": "total_trx",
+        "clean_name": "total_trx",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 192,
+        "sample_values": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      {
+        "original_name": "total_units",
+        "clean_name": "total_units",
+        "data_type": "REAL",
+        "null_count": 0,
+        "unique_count": 861,
+        "sample_values": [
+          "1.0",
+          "0.466666666666667",
+          "1.0",
+          "1.0",
+          "1.0"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "hcp_specialty_zip",
+    "file_name": "hcp_specialty_zip_202507062323.csv",
+    "row_count": 1048575,
+    "column_count": 8,
+    "columns": [
+      {
+        "original_name": "npi",
+        "clean_name": "npi",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 1048575,
+        "sample_values": [
+          "1003000142",
+          "1003000159",
+          "1003000282",
+          "1003000324",
+          "1003000407"
+        ]
+      },
+      {
+        "original_name": "imsid",
+        "clean_name": "imsid",
+        "data_type": "REAL",
+        "null_count": 557466,
+        "unique_count": 491109,
+        "sample_values": [
+          "4684710.0",
+          "2465742.0",
+          "2567316.0",
+          "2227588.0",
+          "3198820.0"
+        ]
+      },
+      {
+        "original_name": "specialty_veeva",
+        "clean_name": "specialty_veeva",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 322,
+        "sample_values": [
+          "AN",
+          "FM",
+          "IMG",
+          "NTR",
+          "HOS"
+        ]
+      },
+      {
+        "original_name": "profession_desc",
+        "clean_name": "profession_desc",
+        "data_type": "TEXT",
+        "null_count": 564,
+        "unique_count": 64,
+        "sample_values": [
+          "MD",
+          "NP",
+          "RN",
+          "DN",
+          "DO"
+        ]
+      },
+      {
+        "original_name": "cns_prescriber_zipcode",
+        "clean_name": "cns_prescriber_zipcode",
+        "data_type": "REAL",
+        "null_count": 9,
+        "unique_count": 20094,
+        "sample_values": [
+          "43623.0",
+          "29406.0",
+          "37218.0",
+          "44195.0",
+          "15825.0"
+        ]
+      },
+      {
+        "original_name": "cns_ic_exclusion",
+        "clean_name": "cns_ic_exclusion",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "N",
+          "N",
+          "Y",
+          "N",
+          "N"
+        ]
+      },
+      {
+        "original_name": "ped_prescriber_zipcode",
+        "clean_name": "ped_prescriber_zipcode",
+        "data_type": "REAL",
+        "null_count": 178,
+        "unique_count": 20094,
+        "sample_values": [
+          "43623.0",
+          "29406.0",
+          "37218.0",
+          "44195.0",
+          "15825.0"
+        ]
+      },
+      {
+        "original_name": "ped_ic_exclusion",
+        "clean_name": "ped_ic_exclusion",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "N",
+          "N",
+          "N",
+          "N",
+          "N"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "marketing_vendor_and_channel",
+    "file_name": "marketing_vendor_and_channel_202507062323.csv",
+    "row_count": 103,
+    "column_count": 13,
+    "columns": [
+      {
+        "original_name": "Category",
+        "clean_name": "Category",
+        "data_type": "TEXT",
+        "null_count": 3,
+        "unique_count": 14,
+        "sample_values": [
+          "Connected TV",
+          "Connected TV",
+          "Connected TV",
+          "Connected TV",
+          "Connected TV"
+        ]
+      },
+      {
+        "original_name": "Sub_Category",
+        "clean_name": "Sub_Category",
+        "data_type": "TEXT",
+        "null_count": 2,
+        "unique_count": 28,
+        "sample_values": [
+          "OTT (Over the Top)",
+          "OTT (Over the Top)",
+          "OTT (Over the Top)",
+          "OTT (Over the Top)",
+          "OTT (Over the Top)"
+        ]
+      },
+      {
+        "original_name": "Vendor",
+        "clean_name": "Vendor",
+        "data_type": "TEXT",
+        "null_count": 12,
+        "unique_count": 69,
+        "sample_values": [
+          "Amazon Fire TV",
+          "Netflix",
+          "YouTube",
+          "Hulu",
+          "Paramount+"
+        ]
+      },
+      {
+        "original_name": "Audience",
+        "clean_name": "Audience",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 6,
+        "sample_values": [
+          " Both     ",
+          " Both     ",
+          " Both     ",
+          " Both     ",
+          " Both     "
+        ]
+      },
+      {
+        "original_name": "Total_Reach",
+        "clean_name": "Total_Reach",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "6",
+          "7",
+          "7",
+          "6",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Targeted_Audience",
+        "clean_name": "Targeted_Audience",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "5",
+          "6",
+          "7",
+          "6",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Engagement_Rate",
+        "clean_name": "Engagement_Rate",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "5",
+          "6",
+          "7",
+          "6",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Call_to_Action",
+        "clean_name": "Call_to_Action",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "4",
+          "5",
+          "6",
+          "5",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Cost_H_M_L",
+        "clean_name": "Cost_H_M_L",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "5",
+          "4",
+          "5",
+          "5",
+          "4"
+        ]
+      },
+      {
+        "original_name": "CPM",
+        "clean_name": "CPM",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "5",
+          "6",
+          "6",
+          "5",
+          "5"
+        ]
+      },
+      {
+        "original_name": "ROI",
+        "clean_name": "ROI",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "5",
+          "6",
+          "6",
+          "5",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Credibility",
+        "clean_name": "Credibility",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "6",
+          "7",
+          "7",
+          "6",
+          "5"
+        ]
+      },
+      {
+        "original_name": "Confidence_in_Source",
+        "clean_name": "Confidence_in_Source",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "6",
+          "7",
+          "7",
+          "6",
+          "5"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "sales_rep_call_activity",
+    "file_name": "sales_rep_call_activity_202507062323.csv",
+    "row_count": 140631,
+    "column_count": 12,
+    "columns": [
+      {
+        "original_name": "Call_ID",
+        "clean_name": "Call_ID",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 140631,
+        "sample_values": [
+          "a048Z00000n9mJP",
+          "a048Z00000n9mJU",
+          "a048Z00000n9mKD",
+          "a048Z00000n9mKI",
+          "a048Z00000n9mKN"
+        ]
+      },
+      {
+        "original_name": "Sales_Type",
+        "clean_name": "Sales_Type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Field",
+          "Field",
+          "Field",
+          "Field",
+          "Field"
+        ]
+      },
+      {
+        "original_name": "State",
+        "clean_name": "State",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 44,
+        "sample_values": [
+          "IN",
+          "IN",
+          "IN",
+          "IN",
+          "IN"
+        ]
+      },
+      {
+        "original_name": "Zip",
+        "clean_name": "Zip",
+        "data_type": "REAL",
+        "null_count": 431,
+        "unique_count": 4384,
+        "sample_values": [
+          "46033.0",
+          "46804.0",
+          "46804.0",
+          "46805.0",
+          "46805.0"
+        ]
+      },
+      {
+        "original_name": "City",
+        "clean_name": "City",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2414,
+        "sample_values": [
+          "Carmel",
+          "Fort Wayne",
+          "Fort Wayne",
+          "Fort Wayne",
+          "Fort Wayne"
+        ]
+      },
+      {
+        "original_name": "Address1",
+        "clean_name": "Address1",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 17592,
+        "sample_values": [
+          "13250 Hazel Dell Pkwy Ste 103",
+          "2410 N Glendale Dr Ste A",
+          "2410 N Glendale Dr Ste A",
+          "1909 Carew St",
+          "3400 E Coliseum Blvd Ste 340"
+        ]
+      },
+      {
+        "original_name": "NPI",
+        "clean_name": "NPI",
+        "data_type": "REAL",
+        "null_count": 222,
+        "unique_count": 25595,
+        "sample_values": [
+          "1295730885.0",
+          "1336278753.0",
+          "1134122674.0",
+          "1316980576.0",
+          "1245237411.0"
+        ]
+      },
+      {
+        "original_name": "HCP_Name",
+        "clean_name": "HCP_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 25479,
+        "sample_values": [
+          "Roy Harper",
+          "Nikki Mann",
+          "Geeta Bisht",
+          "Ronald Pancner",
+          "Prevesh Rustagi"
+        ]
+      },
+      {
+        "original_name": "Call_Type",
+        "clean_name": "Call_Type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "Detail Only",
+          "Detail Only",
+          "Detail Only",
+          "Detail Only",
+          "Detail Only"
+        ]
+      },
+      {
+        "original_name": "Call_Activity_Type",
+        "clean_name": "Call_Activity_Type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 10,
+        "sample_values": [
+          "Face-to-Face with HCP",
+          "HCP Meal",
+          "HCP Meal",
+          "Face-to-Face with HCP",
+          "Face-to-Face with HCP"
+        ]
+      },
+      {
+        "original_name": "Detailed_Products",
+        "clean_name": "Detailed_Products",
+        "data_type": "TEXT",
+        "null_count": 2,
+        "unique_count": 114,
+        "sample_values": [
+          "Aytu RxConnect  Cotempla XR-ODT",
+          "Aytu RxConnect  Adzenys XR-ODT",
+          "Aytu RxConnect  Cotempla XR-ODT",
+          "Aytu RxConnect  Adzenys XR-ODT",
+          "Aytu RxConnect  Adzenys XR-ODT"
+        ]
+      },
+      {
+        "original_name": "Call_Date",
+        "clean_name": "Call_Date",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 454,
+        "sample_values": [
+          "2023-09-11 00:00:00",
+          "2023-09-14 00:00:00",
+          "2023-09-14 00:00:00",
+          "2023-09-14 00:00:00",
+          "2023-09-14 00:00:00"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "sample_activity",
+    "file_name": "sample_activity_202507062323.csv",
+    "row_count": 4023,
+    "column_count": 8,
+    "columns": [
+      {
+        "original_name": "Call_ID",
+        "clean_name": "Call_ID",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 4023,
+        "sample_values": [
+          "a048Z00000n9mNO",
+          "a048Z00000n9mS0",
+          "a048Z00000n9mSj",
+          "a048Z00000n9mYN",
+          "a048Z00000n9mZQ"
+        ]
+      },
+      {
+        "original_name": "Product_Description",
+        "clean_name": "Product_Description",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1,
+        "sample_values": [
+          "KARBINAL ER",
+          "KARBINAL ER",
+          "KARBINAL ER",
+          "KARBINAL ER",
+          "KARBINAL ER"
+        ]
+      },
+      {
+        "original_name": "Call_Type",
+        "clean_name": "Call_Type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1,
+        "sample_values": [
+          "Detail with Sample",
+          "Detail with Sample",
+          "Detail with Sample",
+          "Detail with Sample",
+          "Detail with Sample"
+        ]
+      },
+      {
+        "original_name": "Sample_Product",
+        "clean_name": "Sample_Product",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1,
+        "sample_values": [
+          "Karbinal ER",
+          "Karbinal ER",
+          "Karbinal ER",
+          "Karbinal ER",
+          "Karbinal ER"
+        ]
+      },
+      {
+        "original_name": "Lot_Number",
+        "clean_name": "Lot_Number",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "42233",
+          "42233",
+          "42233",
+          "42233",
+          "42233"
+        ]
+      },
+      {
+        "original_name": "HCP_Name",
+        "clean_name": "HCP_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 1891,
+        "sample_values": [
+          "Richard Roberts",
+          "Carrie Delong",
+          "Scott Saint-Amour",
+          "Elizabeth Scannell",
+          "Charles White"
+        ]
+      },
+      {
+        "original_name": "Quantity",
+        "clean_name": "Quantity",
+        "data_type": "INTEGER",
+        "null_count": 0,
+        "unique_count": 20,
+        "sample_values": [
+          "24",
+          "4",
+          "8",
+          "5",
+          "4"
+        ]
+      },
+      {
+        "original_name": "Sample_Date",
+        "clean_name": "Sample_Date",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 340,
+        "sample_values": [
+          "2023-09-19 00:00:00",
+          "2023-09-19 00:00:00",
+          "2023-09-19 00:00:00",
+          "2023-09-19 00:00:00",
+          "2023-09-19 00:00:00"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "trend_data",
+    "file_name": "trend_data_202507062323.csv",
+    "row_count": 8675,
+    "column_count": 15,
+    "columns": [
+      {
+        "original_name": "year_month",
+        "clean_name": "year_month",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 57,
+        "sample_values": [
+          "2023-01-01",
+          "2023-02-01",
+          "2024-11-01",
+          "2023-10-01",
+          "2023-02-01"
+        ]
+      },
+      {
+        "original_name": "cns_coverage",
+        "clean_name": "cns_coverage",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Covered",
+          "White Space",
+          "White Space",
+          "White Space",
+          "White Space"
+        ]
+      },
+      {
+        "original_name": "ped_coverage",
+        "clean_name": "ped_coverage",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "Covered",
+          "Covered",
+          "White Space",
+          "Covered",
+          "Covered"
+        ]
+      },
+      {
+        "original_name": "prod_market",
+        "clean_name": "prod_market",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 10,
+        "sample_values": [
+          "ADHD MPH Market",
+          "Cotempla XR-ODT",
+          "ADHD MPH Market",
+          "Cotempla XR-ODT",
+          "ADHD MPH Market"
+        ]
+      },
+      {
+        "original_name": "ic_eligible",
+        "clean_name": "ic_eligible",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "N",
+          "N",
+          "N",
+          "N",
+          "N"
+        ]
+      },
+      {
+        "original_name": "pay_type",
+        "clean_name": "pay_type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 3,
+        "sample_values": [
+          "Commercial",
+          "Commercial",
+          "Commercial",
+          "Commercial",
+          "Commercial"
+        ]
+      },
+      {
+        "original_name": "product_group_type",
+        "clean_name": "product_group_type",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 4,
+        "sample_values": [
+          "OTHER",
+          "SOLID",
+          "OTHER",
+          "SOLID",
+          "OTHER"
+        ]
+      },
+      {
+        "original_name": "patient_age",
+        "clean_name": "patient_age",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 3,
+        "sample_values": [
+          "Adult",
+          "Adult",
+          "Adult",
+          "Adult",
+          "Adult"
+        ]
+      },
+      {
+        "original_name": "trx",
+        "clean_name": "trx",
+        "data_type": "REAL",
+        "null_count": 1145,
+        "unique_count": 6903,
+        "sample_values": [
+          "604.379821777344",
+          "83.2566833496094",
+          "106.723068237305",
+          "75.8106002807617",
+          "41.3096199035644"
+        ]
+      },
+      {
+        "original_name": "nrx",
+        "clean_name": "nrx",
+        "data_type": "REAL",
+        "null_count": 1145,
+        "unique_count": 6634,
+        "sample_values": [
+          "604.379821777344",
+          "83.2566833496094",
+          "106.723068237305",
+          "75.8106002807617",
+          "41.3096199035645"
+        ]
+      },
+      {
+        "original_name": "tunits",
+        "clean_name": "tunits",
+        "data_type": "REAL",
+        "null_count": 1145,
+        "unique_count": 7151,
+        "sample_values": [
+          "604.379860992893",
+          "100.645722212222",
+          "106.723067615027",
+          "91.2325186918713",
+          "41.309619594005"
+        ]
+      },
+      {
+        "original_name": "nunits",
+        "clean_name": "nunits",
+        "data_type": "REAL",
+        "null_count": 1145,
+        "unique_count": 6868,
+        "sample_values": [
+          "604.379860992893",
+          "100.645722212222",
+          "106.723067615027",
+          "91.2325186918713",
+          "41.309619594005"
+        ]
+      },
+      {
+        "original_name": "market",
+        "clean_name": "market",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 3,
+        "sample_values": [
+          "ADHD",
+          "ADHD",
+          "ADHD",
+          "ADHD",
+          "ADHD"
+        ]
+      },
+      {
+        "original_name": "submarket",
+        "clean_name": "submarket",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 5,
+        "sample_values": [
+          "ADHD MPH",
+          "ADHD MPH",
+          "ADHD MPH",
+          "ADHD MPH",
+          "ADHD MPH"
+        ]
+      },
+      {
+        "original_name": "entity",
+        "clean_name": "entity",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 2,
+        "sample_values": [
+          "CNS",
+          "CNS",
+          "CNS",
+          "CNS",
+          "CNS"
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "webinar",
+    "file_name": "webinar_202507062323.csv",
+    "row_count": 432,
+    "column_count": 5,
+    "columns": [
+      {
+        "original_name": "First_Name",
+        "clean_name": "First_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 324,
+        "sample_values": [
+          "Michael",
+          "Lisa",
+          "Ana",
+          "Mary",
+          "Brandie"
+        ]
+      },
+      {
+        "original_name": "Last_Name",
+        "clean_name": "Last_Name",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 398,
+        "sample_values": [
+          "Harkness",
+          "Hutton",
+          "Arias Pandey ",
+          "Canonico",
+          "Chan"
+        ]
+      },
+      {
+        "original_name": "npi",
+        "clean_name": "npi",
+        "data_type": "REAL",
+        "null_count": 2,
+        "unique_count": 419,
+        "sample_values": [
+          "1700882636.0",
+          "1003805839.0",
+          "1740443464.0",
+          "1811465594.0",
+          "1376729905.0"
+        ]
+      },
+      {
+        "original_name": "State",
+        "clean_name": "State",
+        "data_type": "TEXT",
+        "null_count": 214,
+        "unique_count": 29,
+        "sample_values": [
+          "NJ",
+          "NJ",
+          "VA",
+          "MI",
+          "OH"
+        ]
+      },
+      {
+        "original_name": "Date_of_Webinar",
+        "clean_name": "Date_of_Webinar",
+        "data_type": "TEXT",
+        "null_count": 0,
+        "unique_count": 23,
+        "sample_values": [
+          "2023-08-31 00:00:00",
+          "2023-08-31 00:00:00",
+          "2023-09-12 00:00:00",
+          "2023-09-12 00:00:00",
+          "2023-09-12 00:00:00"
+        ]
+      }
+    ]
+  }
+]
