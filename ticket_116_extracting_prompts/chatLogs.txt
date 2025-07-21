@@ -1,0 +1,36 @@
+05/28/2025 11:47:25 : Very helpful - thank you. Let's look at HCPs who meet all the following criteria for the timeframe between 2023-07 and 2025-02: no Karbinal ER/AG fTRx, no Karbinal ER calls and no Karbinal ER samples. Lets call this group non-writers. Now, compare that group of HCPs to those who have prescribed Karbinal ER/AG during that same timeframe which we will call writers. Looking at characteristics of the writers group, can you provide NPI of HCPs in the nonwriter group who may be good candidates for Karbinal ER call/sample activity by one of our sales representatives?
+
+Chatbot response: 
+Here's what we found when we compared the two groups over July 2023–Feb 2025:
+
+Writers' key segments
+• Top specialties:
+– PD (Psychiatry) – 183 writers
+– AI (Adult Psychiatry) – 75 writers
+– FM (Family Medicine) – 32 writers
+– GP (General Psychiatry) – 20 writers
+– Others (PDP, A, IM, etc.)
+• Top CNS-writer zip codes:
+– 28334 (9 writers)
+– 70508 (8)
+– 27262, 28105, 70601, 28659 (5 each)
+Non-writers
+• NPIs with zero Karbinal ER/AG fTRx, zero ER calls, zero ER samples: 104 unique NPIs
+Intersection (Query 5)
+• When we filtered the non-writer list to those both in the top specialties AND in one of the top zip codes above, we found no HCPs meeting both criteria.
+Next steps / recommendations
+• We can broaden the candidate pool by relaxing one of the two filters—e.g.:
+– Pull non-writers in top specialties (regardless of zip)
+– Pull non-writers in top zip codes (regardless of specialty)
+• Or add a secondary tier (e.g. next-ranked specialties or zip codes) to surface additional prospects.
+
+Let me know which approach you'd like to take and I can quickly deliver the corresponding NPI list.
+
+
+
+
+
+05/20/2025 18:24:00 : This is accurate - thanks for confirming!
+
+Chatbot response:
+You're welcome! Glad to confirm. Whenever you're ready for the next step—whether it's pulling the promo-touch data, building the responsiveness model, or anything else—just let me know.
