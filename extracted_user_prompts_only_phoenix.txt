@@ -1,0 +1,63 @@
+Extracted User Prompts from Chat History
+==================================================
+
+Total prompts found: 29
+
+1. Evaluating HCPs who had no Rx of Karbinal ER/AG prior to Aug24 but prescribed since that time, can you provide guidance as to whether the number of details before the first Rx was reduced if samples were also disbursed to the HCP?
+
+2. Can you rerun the prior analysis, but limit to Medicaid only?
+
+3. Thank you! Now please rerun the same assessment, using commercial Rx only (no Medicaid) - thanks!
+
+4. Are there certain territories where Adzenys detailing activity is more promotional responsive than others?
+
+5. It appears the most recent analysis is being based on Karbinal ER as opposed to Adzenys XR-ODT. Can you please rerun?
+
+6. Thanks - Adzenys XR-ODT cannot be sampled, so no need to include as part of the assessment.
+
+7. Thanks - Adzenys ER cannot be sampled either. The only place where samples should be considered is for Karbinal ER/AG. Thanks!
+
+8. Looking only at Adzenys XR-ODT commercial Rx only, can you assess promotional responsiveness during the last 6 months and list territories from high to low?
+
+9. Can you use the field trx_comm_adz_xr to build the assessment?
+
+10. Thanks, but no need to provide deliverables at this time! Can you let me know how you are determining the territory names/list?
+
+11. This is accurate - thanks for confirming!
+
+12. Can you provide the optimal spend for each of the following marketing categories ( ACCESS COPAY, HCP PROMO, EMAIL, HCP PROMO, WEBINAR, COMM OPS, CALLS (SALES), INTERNAL SAMPLE, MEDIA) that results in the maximum ROI for each?
+
+13. Can you tell me the timing and products tied to Webinar programs which occurred previously?
+
+14. When did our last webinar programs occur?
+
+15. Can you identify certain HCPs, based on available data and NPI, that delivery of call and/or sample activity for Karbinal ER/AG would have likely resulted in Rx adoption? This should consider any HCP who did not prescriber Karbinal ER/AG during August 2024 or prior months.
+
+16. For the HCP-level prescription data to which you have access, can you define the time period available (i.e., start month and end month)?
+
+17. Can you tell me the latest full month that has been ingested?
+
+18. Very helpful - thank you. Let's look at HCPs who meet all the following criteria for the timeframe between 2023-07 and 2025-02: no Karbinal ER/AG fTRx, no Karbinal ER calls and no Karbinal ER samples. Lets call this group non-writers. Now, compare that group of HCPs to those who have prescribed Karbinal ER/AG during that same timeframe which we will call writers. Looking at characteristics of the writers group, can you provide NPI of HCPs in the nonwriter group who may be good candidates for Karbinal ER call/sample activity by one of our sales representatives?
+
+19. Before I let you know the approach, for clarification purposes on the specialty field: PD are Pediatrics, AI is Allergy/Immunology, GP is general practitioner. Also since this is Karbinal, please use PED writer zip codes. In terms of the filter, can you replace the zip code filter and replace with high gen1-gen2 liquid market rx volume?
+
+20. Ok - makes more sense. Since Karbinal ER/AG does not have Medicaid coverage in several of the states listed, can you please restrict to NY, AL, CT, MS and KY?
+
+21. Can you please create a table which includes the prescriber NPI, state and number of Karbinal ER liquid gen1-gen2 market TRx for each of these providers during the 12 month period ending Feb25?
+
+22. Unfortunately the TRx field populated is not the correct one to be utilized. Can you please provide me details of available Rx fields for potential inclusion and how they are defined?
+
+23. Can you include gen1_gen2_liquid_medicaid_trx in the table?
+
+24. Can you update the Medicaid field to Mar24-Feb25?
+
+25. As opposed to populating the State Gen1+Gen2 Medicaid TRx, can you please populate the HCP's Gen1+Gen2 Medicaid TRx as defined by the HCP's NPI?
+
+26. Can you provide me with full listing of files to which you have access?
+
+27. Can you provide me with the list of fields on ftrx pivot?
+
+28. Can you provide the list of values in product_name?
+
+29. This is incredibly helpful - thank you!
+
